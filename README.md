@@ -13,10 +13,8 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 - Filter TODOs based on project or person. Default setting assumes [[Pepole/Name]] and [[Project/Name]] naming convention for projects and people.
 
 ### Screenshots
-![](./assets/today.png)
-![](./assets/scheduled.png)
-![](./assets/inbox.png)
-![](./assets/someday.png)
+![image](https://user-images.githubusercontent.com/14358394/114269991-384f3e80-9a0a-11eb-880a-74477798ce41.png)
+
 
 ### Roadmap
 - [ ] Scroll to correct line in file when jumping from list view
