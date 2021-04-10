@@ -95,7 +95,7 @@ export class TodoItemView extends ItemView {
           el.addClass('todo-filter-col-input');
           el.createEl("input", {value: this.filter}, (el) => {
             el.addClass('todo-filter-input');
-            el.setAttribute('placeholder','case insensitive RegExp to filter for person or project');
+            el.setAttribute('placeholder','proj/person RexExp filter, case insensitive');
             el.onchange = (e) => {
               this.setFilter((<HTMLInputElement>e.target).value);
             };
