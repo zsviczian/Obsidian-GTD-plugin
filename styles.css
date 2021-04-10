@@ -5,6 +5,30 @@ input.todo-filter-input {
     width: 100%;
 }
 
+table.todo-filter-wrapper {
+    width: 100%;   
+}
+
+tr.todo-filter-row {
+  
+}
+
+td.todo-filter-col-input {
+    margin:0;
+    width: 100%;   
+}
+
+td.todo-filter-col-button {
+    width: 1px;   
+}
+
+
+button.todo-filter-button {
+    white-space: nowrap;
+    margin: 0;
+}
+
+
 hr.todo-item-view-divider {
     margin:0;
 }

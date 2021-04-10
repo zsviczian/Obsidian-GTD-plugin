@@ -25,6 +25,7 @@ export class TodoItemView extends ItemView {
   private props: TodoItemViewProps;
   private state: TodoItemViewState;
   private filter: string;
+  private filterRegexp: RegExp;
 
   constructor(leaf: WorkspaceLeaf, props: TodoItemViewProps) {
     //debugger;
@@ -64,6 +65,7 @@ export class TodoItemView extends ItemView {
 
   private setFilter(filter: string) {
     this.filter = filter;
+    this.filterRegexp = new RegExp(filter,'i');
     this.render();
   }
 
@@ -84,12 +86,27 @@ export class TodoItemView extends ItemView {
   }
 
   private renderSearch(container: HTMLDivElement) {
-    container.createEl("input", {value: this.filter}, (el) => {
-      el.addClass('todo-filter-input');
-      el.setAttribute('placeholder','Filter for person or project');
-      el.onchange = (e) => {
-        this.setFilter((<HTMLInputElement>e.target).value);
-      };
+    container.createEl('table',{},(el) => {
+      el.addClass('todo-filter-wrapper');
+      el.createEl('tr', {}, (el) => {
+        el.addClass('todo-filter-row');
+        el.createEl('td', {}, (el) => {
+          el.addClass('todo-filter-col-input');
+          el.createEl("input", {value: this.filter}, (el) => {
+            el.addClass('todo-filter-input');
+            el.setAttribute('placeholder','case insensitive RegExp to filter for person or project');
+            el.onchange = (e) => {
+              this.setFilter((<HTMLInputElement>e.target).value);
+            };
+          });
+        });
+        el.createEl('td',{}, (el) => {
+          el.addClass('todo-filter-col-button');
+          el.createEl("button", {text: "Filter"}, (el) => {
+            el.addClass('todo-filter-button');
+          });
+        });
+      });
     });
   }
 
@@ -165,8 +182,8 @@ export class TodoItemView extends ItemView {
   }
 
   private filterForState(value: TodoItem, _index: number, _array: TodoItem[]): boolean {
-    const isPersonMatch = value.person.contains(this.filter);
-    const isProjectMatch = value.project.contains(this.filter);
+    const isPersonMatch = value.person.match(this.filterRegexp) != null; 
+    const isProjectMatch = value.project.match(this.filterRegexp) != null;
     const isFilterSet = this.filter!="";
     if (!isFilterSet || isPersonMatch || isProjectMatch) {
       const isToday = (date: Date) => {
