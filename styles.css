@@ -5,6 +5,10 @@ input.todo-filter-input {
     width: 100%;
 }
 
+hr.todo-item-view-divider {
+    margin:0;
+}
+
 div.todo-item-view-toolbar {
     display: flex;
     justify-content: center;

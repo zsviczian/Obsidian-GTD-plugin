@@ -129,10 +129,19 @@ export class TodoItemView extends ItemView {
   }
 
   private renderItems(container: HTMLDivElement) {
-    this.props.todos
-      .filter(this.filterForState, this)
-      .sort(this.sortByActionDate)
-      .forEach((todo) => {
+    const todosToRender = this.props.todos
+                            .filter(this.filterForState, this)
+                            .sort(this.sortByActionDate);
+    todosToRender
+      .forEach((todo,index) => {
+        if(index>0) {
+          if((todo.isWaitingForNote && todosToRender[index-1].isDiscussWithNote) || 
+             (todo.isPromisedToNote && (todosToRender[index-1].isWaitingForNote || todosToRender[index-1].isDiscussWithNote))) {
+            container.createEl('hr', {} ,(el) => {
+              el.addClass('todo-item-view-divider');
+            });
+          }
+        } 
         container.createDiv('todo-item-view-item', (el) => {
           el.createDiv('todo-item-view-item-checkbox', (el) => {
             el.createEl('input', { type: 'checkbox' }, (el) => {
