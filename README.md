@@ -1,22 +1,20 @@
 ## Obsidian TODO Plugin
 
 Text-based GTD in Obsidian.
-
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com/larslockefeer)
+Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/obsidian-plugin-todo)
 
 ### Features
 - Aggregates all outstanding TODOs in your vault and lists them in a single view
-- Split out TODOs by type ("Today", "Scheduled", "Inbox" and "Someday/Maybe")
-- Schedule a TODO for a specific date by adding a tag #YYYY-DD-MM
+- Split out TODOs by type ("Today", "Scheduled", "Inbox", "Someday/Maybe" and "Stakeholder/Project)
+- Schedule a TODO for a specific date by adding a tag #YYYY/DD/MM
 - Mark a TODO as Someday/Maybe by adding a tag #someday
 - Complete TODOs from the list view
 - Quickly jump to the file in which a TODO is found from the list view
+- Filter TODOs based on project or person. Default setting assumes [[Pepole/Name]] and [[Project/Name]] naming convention for projects and people.
 
 ### Screenshots
-![](./assets/today.png)
-![](./assets/scheduled.png)
-![](./assets/inbox.png)
-![](./assets/someday.png)
+![image](https://user-images.githubusercontent.com/14358394/114269991-384f3e80-9a0a-11eb-880a-74477798ce41.png)
+
 
 ### Roadmap
 - [ ] Scroll to correct line in file when jumping from list view
