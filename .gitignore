@@ -11,5 +11,3 @@ package-lock.json
 yarn-error.log
 
 # build
-main.js
-*.js.map
