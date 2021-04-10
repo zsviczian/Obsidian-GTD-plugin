@@ -194,6 +194,25 @@ export class TodoItemView extends ItemView {
 
   private sortByActionDate(a: TodoItem, b: TodoItem): number {
     if (!a.actionDate && !b.actionDate) {
+      if (a.isDiscussWithNote && !b.isDiscussWithNote) {
+        return -1;
+      }
+      if (a.isWaitingForNote && !b.isDiscussWithNote && !b.isWaitingForNote) {
+        return -1;
+      }
+      if (a.isPromisedToNote && !b.isDiscussWithNote && !b.isWaitingForNote) {
+        return -1;
+      }
+      if (b.isDiscussWithNote && !a.isDiscussWithNote) {
+        return 1;
+      }
+      if (b.isWaitingForNote && !a.isDiscussWithNote && !a.isWaitingForNote) {
+        return 1;
+      }
+      if (b.isPromisedToNote && !a.isDiscussWithNote && !a.isWaitingForNote) {
+        return 1;
+      }     
+
       if (a.isSomedayMaybeNote && !b.isSomedayMaybeNote) {
         return -1;
       }
