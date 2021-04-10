@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-sample-plugin",
+  "name": "obsidian-gtd-plugin",
   "version": "0.9.7",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "description": "GTD action tracker",
   "main": "main.js",
   "scripts": {
     "build": "rollup --config rollup.config.js",

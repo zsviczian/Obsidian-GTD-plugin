@@ -1,19 +1,37 @@
-import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf } from 'obsidian';
+import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf, } from 'obsidian';
 import { VIEW_TYPE_TODO } from './constants';
 import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
 import { TodoIndex } from './model/TodoIndex';
+import {DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab} from './settings';
 
-export default class TodoPlugin extends Plugin {
+
+export default class ActionTrackerPlugin extends Plugin {
   private todoIndex: TodoIndex;
   private view: TodoItemView;
+  settings: ActionTrackerSettings;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
-    this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this));
   }
 
   async onload(): Promise<void> {
+    console.log('loading plugin');
+    
+    await this.loadSettings();
+
+    const props = {
+      personRegexp: new RegExp (this.getSettingValue('personRegexpString')),
+      projectRegexp: new RegExp (this.getSettingValue('projectRegexpString')),
+      dateRegexp: new RegExp (this.getSettingValue('dateRegexpString')),
+      discussWithRegexp: new RegExp (this.getSettingValue('discussWithRegexpString')),
+      waitingForRegexp: new RegExp (this.getSettingValue('waitingForRegexpString')),
+      promisedToRegexp: new RegExp (this.getSettingValue('promisedToRegexpString')),
+      somedayMaybeRegexp: new RegExp (this.getSettingValue('somedayMaybeRegexpString')),
+    }
+    
+    this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this),props);
+
     this.registerView(VIEW_TYPE_TODO, (leaf: WorkspaceLeaf) => {
       const todos: TodoItem[] = [];
       const props = {
@@ -29,6 +47,8 @@ export default class TodoPlugin extends Plugin {
       this.view = new TodoItemView(leaf, props);
       return this.view;
     });
+
+    this.addSettingTab(new ActionTrackerSettingTab(this.app, this));
 
     if (this.app.workspace.layoutReady) {
       this.initLeaf();
@@ -64,4 +84,18 @@ export default class TodoPlugin extends Plugin {
       };
     });
   }
+
+  async loadSettings() {
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	}
+
+	async saveSettings() {
+		await this.saveData(this.settings);
+	}
+
+  getSettingValue<K extends keyof ActionTrackerSettings>(setting: K): ActionTrackerSettings[K] {
+    return this.settings[setting]
+  }
 }
+
+

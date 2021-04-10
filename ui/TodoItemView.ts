@@ -8,7 +8,9 @@ enum TodoItemViewPane {
   Scheduled,
   Inbox,
   Someday,
+  Stakeholder,
 }
+
 export interface TodoItemViewProps {
   todos: TodoItem[];
   openFile: (filePath: string) => void;
@@ -22,13 +24,16 @@ interface TodoItemViewState {
 export class TodoItemView extends ItemView {
   private props: TodoItemViewProps;
   private state: TodoItemViewState;
+  private filter: string;
 
   constructor(leaf: WorkspaceLeaf, props: TodoItemViewProps) {
+    //debugger;
     super(leaf);
     this.props = props;
     this.state = {
       activePane: TodoItemViewPane.Today,
     };
+    this.filter = '';
   }
 
   getViewType(): string {
@@ -57,16 +62,32 @@ export class TodoItemView extends ItemView {
     this.render();
   }
 
+  private setFilter(filter: string) {
+    this.filter = filter;
+    this.render();
+  }
+
   private render(): void {
     const container = this.containerEl.children[1];
     container.empty();
     container.createDiv('todo-item-view-container', (el) => {
+      el.createDiv('todo-item-view-search', (el) => {
+        this.renderSearch(el);
+      });
       el.createDiv('todo-item-view-toolbar', (el) => {
         this.renderToolBar(el);
       });
       el.createDiv('todo-item-view-items', (el) => {
         this.renderItems(el);
       });
+    });
+  }
+
+  private renderSearch(container: HTMLDivElement) {
+    container.createEl("input", {"value": this.filter}, (el) => {
+      el.onchange = (e) => {
+        this.setFilter((<HTMLInputElement>e.target).value);
+      };
     });
   }
 
@@ -99,6 +120,10 @@ export class TodoItemView extends ItemView {
       el.appendChild(RenderIcon(Icon.Someday, 'Someday / Maybe'));
       el.onClickEvent(() => setActivePane(TodoItemViewPane.Someday));
     });
+    container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Stakeholder)}`, (el) => {
+      el.appendChild(RenderIcon(Icon.Stakeholder, 'Stakeholder actions'));
+      el.onClickEvent(() => setActivePane(TodoItemViewPane.Stakeholder));
+    });
   }
 
   private renderItems(container: HTMLDivElement) {
@@ -129,33 +154,40 @@ export class TodoItemView extends ItemView {
   }
 
   private filterForState(value: TodoItem, _index: number, _array: TodoItem[]): boolean {
-    const isToday = (date: Date) => {
-      const today = new Date();
-      return (
-        date.getDate() == today.getDate() &&
-        date.getMonth() == today.getMonth() &&
-        date.getFullYear() == today.getFullYear()
-      );
-    };
+    const isPersonMatch = value.person.contains(this.filter);
+    const isProjectMatch = value.project.contains(this.filter);
+    const isFilterSet = this.filter!="";
+    if (!isFilterSet || isPersonMatch || isProjectMatch) {
+      const isToday = (date: Date) => {
+        const today = new Date();
+        return (
+          date.getDate() == today.getDate() &&
+          date.getMonth() == today.getMonth() &&
+          date.getFullYear() == today.getFullYear()
+        );
+      };
 
-    const isBeforeToday = (date: Date) => {
-      const today = new Date();
-      return date < today;
-    };
+      const isBeforeToday = (date: Date) => {
+        const today = new Date();
+        return date < today;
+      };
 
-    const isTodayNote = value.actionDate && (isToday(value.actionDate) || isBeforeToday(value.actionDate));
-    const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote;
+      const isTodayNote = value.actionDate && (isToday(value.actionDate) || isBeforeToday(value.actionDate));
+      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote;
 
-    switch (this.state.activePane) {
-      case TodoItemViewPane.Inbox:
-        return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote;
-      case TodoItemViewPane.Scheduled:
-        return isScheduledNote;
-      case TodoItemViewPane.Someday:
-        return value.isSomedayMaybeNote;
-      case TodoItemViewPane.Today:
-        return isTodayNote;
-    }
+      switch (this.state.activePane) {
+        case TodoItemViewPane.Inbox:
+          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote;
+        case TodoItemViewPane.Scheduled:
+          return isScheduledNote;
+        case TodoItemViewPane.Someday:
+          return value.isSomedayMaybeNote;
+        case TodoItemViewPane.Today:
+          return isTodayNote;
+        case TodoItemViewPane.Stakeholder:
+          return isFilterSet;
+      }
+    } else return false;
   }
 
   private sortByActionDate(a: TodoItem, b: TodoItem): number {

@@ -2,12 +2,24 @@ import { TAbstractFile, TFile, Vault } from 'obsidian';
 import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoParser } from '../model/TodoParser';
 
+export interface TodoItemIndexProps {
+  personRegexp:       RegExp;
+  projectRegexp:      RegExp;
+  dateRegexp:         RegExp;
+  discussWithRegexp:  RegExp;
+  waitingForRegexp:   RegExp;
+  promisedToRegexp:   RegExp;
+  somedayMaybeRegexp: RegExp;
+}
+
 export class TodoIndex {
   private vault: Vault;
   private todos: Map<string, TodoItem[]>;
   private listeners: ((todos: TodoItem[]) => void)[];
+  private props: TodoItemIndexProps;
 
-  constructor(vault: Vault, listener: (todos: TodoItem[]) => void) {
+  constructor(vault: Vault, listener: (todos: TodoItem[]) => void, props: TodoItemIndexProps) {
+    this.props = props;
     this.vault = vault;
     this.todos = new Map<string, TodoItem[]>();
     this.listeners = [listener];
@@ -30,7 +42,7 @@ export class TodoIndex {
 
     const totalTimeMs = new Date().getTime() - timeStart;
     console.log(
-      `[obsidian-plugin-todo] Parsed ${numberOfTodos} TODOs from ${markdownFiles.length} markdown files in (${
+      `[obsidian-stakeholder_action-plugin] Parsed ${numberOfTodos} TODOs from ${markdownFiles.length} markdown files in (${
         totalTimeMs / 1000.0
       }s)`,
     );
@@ -70,9 +82,14 @@ export class TodoIndex {
     }
   }
 
+  public setProps(setter: (currentProps: TodoItemIndexProps) => TodoItemIndexProps): void {
+    this.props = setter(this.props);
+    //do I need to do anything else??
+  }
+
   private async parseTodosInFile(file: TFile): Promise<TodoItem[]> {
     // TODO: Does it make sense to index completed TODOs at all?
-    const todoParser = new TodoParser();
+    const todoParser = new TodoParser(this.props);
     const fileContents = await this.vault.cachedRead(file);
     return todoParser
       .parseTasks(file.path, fileContents)

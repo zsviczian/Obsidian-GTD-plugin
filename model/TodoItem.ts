@@ -19,16 +19,25 @@ export class TodoItem {
   public sourceFilePath: string;
   public startIndex: number;
   public length: number;
-
   public status: TodoItemStatus;
   public description: string;
+  public person: string;
+  public project: string;
   public actionDate?: Date;
   public isSomedayMaybeNote: boolean;
+  public isDiscussWithNote: boolean;
+  public isWaitingForNote: boolean;
+  public isPromisedToNote: boolean;
 
   constructor(
     status: TodoItemStatus,
     description: string,
+    person: string,
+    project: string,
     isSomedayMaybeNote: boolean,
+    isDiscussWithNote: boolean,
+    isWaitingForNote: boolean,
+    isPromisedToNote: boolean,
     sourceFilePath: string,
     startIndex: number,
     length: number,
@@ -36,8 +45,13 @@ export class TodoItem {
   ) {
     this.status = status;
     this.description = description;
+    this.person = person;
+    this.project = project;
     this.actionDate = actionDate;
     this.isSomedayMaybeNote = isSomedayMaybeNote;
+    this.isDiscussWithNote = isDiscussWithNote;
+    this.isWaitingForNote = isWaitingForNote;
+    this.isPromisedToNote = isPromisedToNote;
     this.sourceFilePath = sourceFilePath;
     this.startIndex = startIndex;
     this.length = length;

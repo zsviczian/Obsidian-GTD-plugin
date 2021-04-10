@@ -1,1 +1,1 @@
-export const VIEW_TYPE_TODO = 'online.larslockefeer.obsidian-plugin-todo';
+export const VIEW_TYPE_TODO = 'online.zsviczian.obsidian-stakeholder_action-plugin';
