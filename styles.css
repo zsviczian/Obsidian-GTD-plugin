@@ -1,6 +1,10 @@
 div.todo-item-view-container {
 }
 
+input.todo-filter-input {
+    width: 100%;
+}
+
 div.todo-item-view-toolbar {
     display: flex;
     justify-content: center;

@@ -84,7 +84,9 @@ export class TodoItemView extends ItemView {
   }
 
   private renderSearch(container: HTMLDivElement) {
-    container.createEl("input", {"value": this.filter}, (el) => {
+    container.createEl("input", {value: this.filter}, (el) => {
+      el.addClass('todo-filter-input');
+      el.setAttribute('placeholder','Filter for person or project');
       el.onchange = (e) => {
         this.setFilter((<HTMLInputElement>e.target).value);
       };
