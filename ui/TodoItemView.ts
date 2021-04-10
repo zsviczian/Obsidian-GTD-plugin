@@ -4,6 +4,7 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { RenderIcon, Icon } from '../ui/icons';
 
 enum TodoItemViewPane {
+  Aging,
   Today,
   Scheduled,
   Inbox,
@@ -123,6 +124,11 @@ export class TodoItemView extends ItemView {
       this.setViewState(newState);
     };
 
+    container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Aging)}`, (el) => {
+      el.appendChild(RenderIcon(Icon.Aging, 'Aging'));
+      el.onClickEvent(() => setActivePane(TodoItemViewPane.Aging));
+    });
+
     container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Today)}`, (el) => {
       el.appendChild(RenderIcon(Icon.Today, 'Today'));
       el.onClickEvent(() => setActivePane(TodoItemViewPane.Today));
@@ -187,7 +193,7 @@ export class TodoItemView extends ItemView {
     const isFilterSet = this.filter!="";
     if (!isFilterSet || isPersonMatch || isProjectMatch) {
       const isToday = (date: Date) => {
-        const today = new Date();
+        let today = new Date();
         return (
           date.getDate() == today.getDate() &&
           date.getMonth() == today.getMonth() &&
@@ -196,22 +202,26 @@ export class TodoItemView extends ItemView {
       };
 
       const isBeforeToday = (date: Date) => {
-        const today = new Date();
+        let today = (new Date())
+        today.setHours(0, 0, 0, 0);
         return date < today;
       };
 
-      const isTodayNote = value.actionDate && (isToday(value.actionDate) || isBeforeToday(value.actionDate));
-      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote;
+      const isAgingNote = value.actionDate && isBeforeToday(value.actionDate);
+      const isTodayNote = value.actionDate && isToday(value.actionDate);
+      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote && !isAgingNote;
 
       switch (this.state.activePane) {
         case TodoItemViewPane.Inbox:
-          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote;
+          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isAgingNote;
         case TodoItemViewPane.Scheduled:
           return isScheduledNote;
         case TodoItemViewPane.Someday:
           return value.isSomedayMaybeNote;
         case TodoItemViewPane.Today:
           return isTodayNote;
+        case TodoItemViewPane.Aging:
+            return isAgingNote;
         case TodoItemViewPane.Stakeholder:
           return isFilterSet;
       }
