@@ -60,9 +60,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
   
     new Setting(containerEl)
         .setName('Date regexp pattern')
-        .setDesc('This is the regular expression to get the date for an action.')
+        .setDesc('This is the regular expression to get the date for an action. The RegExp needs to capture 3 values. The first one should be the year (yyyy), the sceond the month (mm), the third the day (dd).')
         .addText(text => text
-          .setPlaceholder('#(\\d{4}\\/\\d{2}\\/\\d{2})')
+          .setPlaceholder('#(\\d{4})\\/(\\d{2})\\/(\\d{2})')
           .setValue(this.plugin.settings.dateRegexpString)
           .onChange(async (value) => {
             this.plugin.settings.dateRegexpString = value;
