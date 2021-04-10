@@ -14,7 +14,7 @@ export interface ActionTrackerSettings {
 export const DEFAULT_SETTINGS: ActionTrackerSettings = {
 	personRegexpString:        '\\[{2}People\\/(.*?)\\]{2}',
   projectRegexpString:       '\\[{2}Projects\\/(.*?)\\]{2}',
-  dateRegexpString:          '#(\\d{4}\\/\\d{2}\\/\\d{2})',
+  dateRegexpString:          '#(\\d{4})\\/(\\d{2})\\/(\\d{2})',
   discussWithRegexpString:   '#(discussWith)',
   waitingForRegexpString:    '#(waitingFor)',
   promisedToRegexpString:    '#(promisedTo)',

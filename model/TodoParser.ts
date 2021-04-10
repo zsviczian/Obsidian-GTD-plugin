@@ -20,8 +20,10 @@ export class TodoParser {
     const description = entry[3];
 
     const dateMatches = description.match(this.props.dateRegexp);
-    const actionDate = dateMatches != null ? new Date(dateMatches[1]) : undefined;
-
+    let actionDate = undefined;
+    if (dateMatches != null) {
+      actionDate = dateMatches.length > 3 ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0) : undefined;
+    }  
     const personMatches = description.match(this.props.personRegexp);
     const person = personMatches != null ? personMatches[1] : "";
 
