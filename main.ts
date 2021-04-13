@@ -2,7 +2,7 @@ import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf, } from 'obsidian';
 import { VIEW_TYPE_TODO } from './constants';
 import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
-import { TodoIndex } from './model/TodoIndex';
+import { TodoIndex,TodoItemIndexProps } from './model/TodoIndex';
 import {DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab} from './settings';
 
 
@@ -15,12 +15,8 @@ export default class ActionTrackerPlugin extends Plugin {
     super(app, manifest);
   }
 
-  async onload(): Promise<void> {
-    console.log('loading plugin');
-    
-    await this.loadSettings();
-
-    const props = {
+  private getTodoItemIndexProps() : TodoItemIndexProps {
+    return {
       personRegexp: new RegExp (this.getSettingValue('personRegexpString')),
       projectRegexp: new RegExp (this.getSettingValue('projectRegexpString')),
       dateRegexp: new RegExp (this.getSettingValue('dateRegexpString')),
@@ -28,9 +24,15 @@ export default class ActionTrackerPlugin extends Plugin {
       waitingForRegexp: new RegExp (this.getSettingValue('waitingForRegexpString')),
       promisedToRegexp: new RegExp (this.getSettingValue('promisedToRegexpString')),
       somedayMaybeRegexp: new RegExp (this.getSettingValue('somedayMaybeRegexpString')),
-    }
+    };
+  }
+
+  async onload(): Promise<void> {
+    console.log('loading plugin');
     
-    this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this),props);
+    await this.loadSettings();
+    
+    this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this),this.getTodoItemIndexProps());
 
     this.registerView(VIEW_TYPE_TODO, (leaf: WorkspaceLeaf) => {
       const todos: TodoItem[] = [];
@@ -91,6 +93,7 @@ export default class ActionTrackerPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+    await this.todoIndex.reloadIndex(this.getTodoItemIndexProps());
 	}
 
   getSettingValue<K extends keyof ActionTrackerSettings>(setting: K): ActionTrackerSettings[K] {

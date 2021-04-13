@@ -38,7 +38,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Person regexp pattern')
-			.setDesc('This is the regular expression to identify the action party in the action.')
+			.setDesc('This is the regular expression to identify the action party in the action. Used for filtering todos by person.')
 			.addText(text => text
 				.setPlaceholder('\\[{2}People\\/(.*?)\\]{2}')
         .setValue(this.plugin.settings.personRegexpString)
@@ -49,7 +49,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Project regexp pattern')
-      .setDesc('This is the regular expression to identify the project in the action.')
+      .setDesc('This is the regular expression to identify the project in the action. Used for filtering todos by project name.')
       .addText(text => text
         .setPlaceholder('\\[{2}Projects\\/(.*?)\\]{2}')
         .setValue(this.plugin.settings.projectRegexpString)
@@ -71,7 +71,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
   
     new Setting(containerEl)
 			.setName('Discuss With regexp pattern')
-			.setDesc('This is the regexp pattern you use to mark topics you want to discuss with someone.')
+			.setDesc('This is the regexp pattern you use to mark topics you want to discuss with someone. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.')
 			.addText(text => text
 				.setPlaceholder('#(discussWith)')
         .setValue(this.plugin.settings.discussWithRegexpString)
@@ -82,7 +82,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Waiting For regexp pattern')
-      .setDesc('This is the regexp pattern you use to mark topics someone has promised to deliver to me.')
+      .setDesc('This is the regexp pattern you use to mark topics someone has promised to deliver to me. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.')
       .addText(text => text
         .setPlaceholder('#(waitingFor)')
         .setValue(this.plugin.settings.waitingForRegexpString)
@@ -93,7 +93,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
     
     new Setting(containerEl)
       .setName('Promised To regexp pattern')
-      .setDesc('This is the regexp pattern you use to mark topics someone has promised to deliver to me.')
+      .setDesc('This is the regexp pattern you use to mark topics someone has promised to deliver to me. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.')
       .addText(text => text
         .setPlaceholder('#(promisedTo)')
         .setValue(this.plugin.settings.promisedToRegexpString)
@@ -104,7 +104,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Someday Maybe regexp pattern')
-      .setDesc('This is the regexp pattern you use to mark actions without a deadline.')
+      .setDesc('This is the regexp pattern you use to mark actions deliberately without a deadline - i.e. bucket list. Actions without a valid tag and without a deadline will show up in the Inbox.')
       .addText(text => text
         .setPlaceholder('#(someday)')
         .setValue(this.plugin.settings.somedayMaybeRegexpString)

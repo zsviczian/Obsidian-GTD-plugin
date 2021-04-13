@@ -25,6 +25,11 @@ export class TodoIndex {
     this.listeners = [listener];
   }
 
+  async reloadIndex(props: TodoItemIndexProps) {
+    this.props = props;
+    await this.initialize();
+  }
+  
   async initialize(): Promise<void> {
     // TODO: persist index & last sync timestamp; only parse files that changed since then.
     const todoMap = new Map<string, TodoItem[]>();
