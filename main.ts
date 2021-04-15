@@ -1,9 +1,10 @@
 import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf } from 'obsidian';
+
 import { VIEW_TYPE_TODO } from './constants';
-import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
-import { TodoItem, TodoItemStatus } from './model/TodoItem';
 import { TodoIndex, TodoItemIndexProps } from './model/TodoIndex';
-import { DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab } from './settings';
+import { TodoItem, TodoItemStatus } from './model/TodoItem';
+import { ActionTrackerSettings, ActionTrackerSettingTab, DEFAULT_SETTINGS } from './settings';
+import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
 
 export default class ActionTrackerPlugin extends Plugin {
   private todoIndex: TodoIndex;
@@ -86,11 +87,11 @@ export default class ActionTrackerPlugin extends Plugin {
     });
   }
 
-  async loadSettings() {
+  async loadSettings(): Promise<void> {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
-  async saveSettings() {
+  async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
     await this.todoIndex.reloadIndex(this.getTodoItemIndexProps());
   }
