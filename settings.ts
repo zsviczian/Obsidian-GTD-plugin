@@ -61,19 +61,19 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 		this.containerEl.empty();
 
 		this.containerEl.createEl('h1', {text: 'Selectors'});
-    this.containerEl.createEl('p', {text: 'Selectors are regular expressions that select specific part of the action. ' +
-                                          'These values are used to control what is presented in each view and/or to filter the views.'});
+    this.containerEl.createEl('p', {text: 'Selectors are regular expressions that capture specific part of an action. ' +
+                                          'These values control which actions to list in each view, and to filter those lists using the search at the top of the O-GTD pane.'});
 
     this.containerEl.createEl('h3', {text: 'Snipets'});
     this.containerEl.createEl('p', {text: 'Use these selectors to capture specific information from your action item. ' + 
                                           'You can filter view results with these using the search box at the top. ' +
-                                          'Also the "Stakeholder and projects actions" view only shows actions ' + 
+                                          'The "Stakeholder and projects actions" view only shows actions ' + 
                                           'that have either a Project or an Action Party. '});
     this.containerEl.createEl('p', {text: 'The patterns will only capture the first match. If you mention multiple ' +
                                           'people and projects in a TODO, you must place the action party first. For example:'});
-    this.containerEl.createEl('p', {text: '[ ] #discussWith [[People/Catherine]] what present to by for [[People/Kate]] as a recognition ' +
+    this.containerEl.createEl('p', {text: '[ ] #discussWith [[People/Catherine]] what present to buy for [[People/Kate]] as a recognition ' +
                                           'for achievements on [[Project/Secret campaign]].'});
-    this.containerEl.createEl('p', {text: 'Catherine will be identified as the Action Party and Secret campaign as the Project.'});
+    this.containerEl.createEl('p', {text: 'Catherine will be identified as the Action Party and "Secret campaign" as the Project.'});
 		new Setting(containerEl)
 			.setName('Action Party') 
 			.setDesc('This is the regular expression to identify the action party in the action. Used for filtering todos by person.')
@@ -98,9 +98,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
       .setName('Miscellaneous')
-      .setDesc('This is the regular expression to capture what ever other part of the action you prefer to capture. ' +
-               'This snipet will only be used in the search box at the top of the O-GTD panel. Default is to capture nothing. ' +
-               'should you want to capture the whole action line for example, change the pattern to: (.*) ')
+      .setDesc('This is the regular expression to capture whatever other part of the action you prefer to capture. ' +
+               'This snipet will only effect filtering when using the search box at the top of the O-GTD panel. The default setting is to capture nothing. ' +
+               'Should you, for example, want to capture the whole action line, change the pattern to: (.*)')
       .addText(text => text
         .setPlaceholder('(.*)')
         .setValue(this.plugin.settings.miscRegexpString)
@@ -110,14 +110,14 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         }));
   
     this.containerEl.createEl('h3', {text: 'Date'});
-    this.containerEl.createEl('p', {text: 'This is the actions\'s due date. If set your action will show up in one of the date filtered views: ' + 
+    this.containerEl.createEl('p', {text: 'This is the actions\'s due date. If set, your action will show up in one of the date filtered views: ' + 
                                           'Aging (date is overdue), Today (date is today), Scheduled (future date).'});
     new Setting(containerEl)
         .setName('Date')
-        .setDesc('This is the regular expression to get the date for an action. You have two options. If your RegExp captures 3 values, then '+
+        .setDesc('This is the regular expression to get the date for an action. You have two options. 1) If your RegExp captures 3 values, then '+
                  'the first must be the year (yyyy), the sceond the month (mm), the third the day (dd). ' +
-                 'If your RegExp captures a single value, then it must be a valid date format based on your regional settings. For example: ' +
-                 '#(\\d{4}\\/\\d{2}\\/\\d{2}) is also valid as it captures a single date as yyyy/mm/dd')
+                 '2) If your RegExp captures a single value, then it must be a valid date based on your regional settings. For example: ' +
+                 '#(\\d{4}\\-\\d{2}\\-\\d{2}) is captures the following date yyyy-mm-dd')
         .addText(text => text
           .setPlaceholder('#(\\d{4})\\/(\\d{2})\\/(\\d{2})')
           .setValue(this.plugin.settings.dateRegexpString)
@@ -127,10 +127,10 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         }));
     
     this.containerEl.createEl('h3', {text: 'Stakeholder-action tags'});
-    this.containerEl.createEl('p', {text: 'These three tags allow you to qualify the type of stakeholder action you want to take. ' +
+    this.containerEl.createEl('p', {text: 'These three tags allow you to qualify the type of stakeholder action you intend to take. ' +
                                           'In the "Stakeholder and project actions" view items will be pre-sorted ' +
                                           'with #discussWith first, #waitingFor second, and #promisedTo third. I can imagine situations ' + 
-                                          'when you repurpose these and select for #high, #medium, #low by changing the regular expressions.'});
+                                          'when you repurpose these to list actions based on priority: #high, #medium, #low by changing the regular expressions.'});
     new Setting(containerEl)
 			.setName('Discuss With tag')
 			.setDesc('This is the regular expression to identify topics you want to discuss with someone.')
@@ -165,12 +165,12 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         }));        
 
     this.containerEl.createEl('h3', {text: 'Someday/Maybe tag'});
-    this.containerEl.createEl('p', {text: 'Use a tag to mark actions that are deliberately without a deadline, such as ' +
+    this.containerEl.createEl('p', {text: 'Use this tag to mark actions that are deliberately without a deadline, such as ' +
                                           'items on your bucket list. These actions will show up in the "Someday/Maybe view. ' + 
-                                          'Actions without a valid tag and without a deadline will show up in the Inbox.'});
+                                          'Note, that actions without a valid tag and without a deadline will show up in the Inbox.'});
     new Setting(containerEl)
       .setName('Someday Maybe regexp pattern')
-      .setDesc('This is the regexp pattern you use ')
+      .setDesc('This is the regular expression to identify the Someday/Maybe tag.')
       .addText(text => text
         .setPlaceholder('#(someday)')
         .setValue(this.plugin.settings.somedayMaybeRegexpString)
@@ -181,8 +181,8 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
     
     this.containerEl.createEl('h1', {text: 'View Configuration'});   
     this.containerEl.createEl('p', {text: 'You can show/hide specific views based on your needs. ' +
-                                          'As you customize some of the selectors, views may change their meaning. You can update '+
-                                          'the tooltip text to help you remember your intended use for each view.'});
+                                          'As you customize some of the selectors, views may slightly change their meaning. You can update '+
+                                          'the tooltip text to help you remember your intent with each view.'});
     
     this.containerEl.createEl('h3', {text: 'Inbox'});
     new Setting(containerEl)
