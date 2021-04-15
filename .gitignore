@@ -11,4 +11,5 @@ package-lock.json
 yarn-error.log
 
 # build
-dist/
+dist/*
+main.js
