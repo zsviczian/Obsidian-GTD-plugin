@@ -1,6 +1,6 @@
-## Obsidian TODO Plugin
+## Obsidian gets things done!
 
-Text-based GTD in Obsidian.
+OTD - The extension for GTD practitioners.
 Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/obsidian-plugin-todo)
 
 ### Features
