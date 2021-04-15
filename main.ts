@@ -61,7 +61,7 @@ export default class ActionTrackerPlugin extends Plugin {
   }
 
   onunload(): void {
-    this.app.workspace.getLeavesOfType(VIEW_TYPE_TODO).forEach((leaf) => leaf.detach());
+    this.app.workspace.getLeavesOfType(VIEW_TYPE_TODO).forEach(leaf => leaf.detach());
   }
 
   initLeaf(): void {
