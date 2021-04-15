@@ -30,7 +30,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
   }
 
   display(): void {
-    let { containerEl } = this;
+    const { containerEl } = this;
 
     this.containerEl.empty();
 
@@ -41,11 +41,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regular expression to identify the action party in the action. Used for filtering todos by person.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('\\[{2}People\\/(.*?)\\]{2}')
           .setValue(this.plugin.settings.personRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.personRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -56,11 +56,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regular expression to identify the project in the action. Used for filtering todos by project name.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('\\[{2}Projects\\/(.*?)\\]{2}')
           .setValue(this.plugin.settings.projectRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.projectRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -71,11 +71,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regular expression to get the date for an action. The RegExp needs to capture 3 values. The first one should be the year (yyyy), the sceond the month (mm), the third the day (dd).',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('#(\\d{4})\\/(\\d{2})\\/(\\d{2})')
           .setValue(this.plugin.settings.dateRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.dateRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -86,11 +86,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regexp pattern you use to mark topics you want to discuss with someone. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('#(discussWith)')
           .setValue(this.plugin.settings.discussWithRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.discussWithRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -101,11 +101,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regexp pattern you use to mark topics someone has promised to deliver to me. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('#(waitingFor)')
           .setValue(this.plugin.settings.waitingForRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.waitingForRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -116,11 +116,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regexp pattern you use to mark topics someone has promised to deliver to me. "Discuss with", "Promised to", and "Waiting for" actions show up under the Stakeholder Actions tab.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('#(promisedTo)')
           .setValue(this.plugin.settings.promisedToRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.promisedToRegexpString = value;
             await this.plugin.saveSettings();
           }),
@@ -131,11 +131,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc(
         'This is the regexp pattern you use to mark actions deliberately without a deadline - i.e. bucket list. Actions without a valid tag and without a deadline will show up in the Inbox.',
       )
-      .addText(text =>
+      .addText((text) =>
         text
           .setPlaceholder('#(someday)')
           .setValue(this.plugin.settings.somedayMaybeRegexpString)
-          .onChange(async value => {
+          .onChange(async (value) => {
             this.plugin.settings.somedayMaybeRegexpString = value;
             await this.plugin.saveSettings();
           }),

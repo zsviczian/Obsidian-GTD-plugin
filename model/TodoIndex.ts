@@ -3,12 +3,12 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoParser } from '../model/TodoParser';
 
 export interface TodoItemIndexProps {
-  personRegexp:       RegExp;
-  projectRegexp:      RegExp;
-  dateRegexp:         RegExp;
-  discussWithRegexp:  RegExp;
-  waitingForRegexp:   RegExp;
-  promisedToRegexp:   RegExp;
+  personRegexp: RegExp;
+  projectRegexp: RegExp;
+  dateRegexp: RegExp;
+  discussWithRegexp: RegExp;
+  waitingForRegexp: RegExp;
+  promisedToRegexp: RegExp;
   somedayMaybeRegexp: RegExp;
 }
 
@@ -29,7 +29,7 @@ export class TodoIndex {
     this.props = props;
     await this.initialize();
   }
-  
+
   async initialize(): Promise<void> {
     // TODO: persist index & last sync timestamp; only parse files that changed since then.
     const todoMap = new Map<string, TodoItem[]>();
@@ -47,9 +47,9 @@ export class TodoIndex {
 
     const totalTimeMs = new Date().getTime() - timeStart;
     console.log(
-      `[obsidian-stakeholder_action-plugin] Parsed ${numberOfTodos} TODOs from ${markdownFiles.length} markdown files in (${
-        totalTimeMs / 1000.0
-      }s)`,
+      `[obsidian-stakeholder_action-plugin] Parsed ${numberOfTodos} TODOs from ${
+        markdownFiles.length
+      } markdown files in (${totalTimeMs / 1000.0}s)`,
     );
     this.todos = todoMap;
     this.registerEventHandlers();

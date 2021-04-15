@@ -37,7 +37,7 @@ export class TodoItemView extends ItemView {
     };
     this.filter = '';
   }
-  
+
   getViewType(): string {
     return VIEW_TYPE_TODO;
   }
@@ -66,7 +66,7 @@ export class TodoItemView extends ItemView {
 
   private setFilter(filter: string) {
     this.filter = filter;
-    this.filterRegexp = new RegExp(filter,'i');
+    this.filterRegexp = new RegExp(filter, 'i');
     this.render();
   }
 
@@ -87,23 +87,23 @@ export class TodoItemView extends ItemView {
   }
 
   private renderSearch(container: HTMLDivElement) {
-    container.createEl('table',{},(el) => {
+    container.createEl('table', {}, (el) => {
       el.addClass('todo-filter-wrapper');
       el.createEl('tr', {}, (el) => {
         el.addClass('todo-filter-row');
         el.createEl('td', {}, (el) => {
           el.addClass('todo-filter-col-input');
-          el.createEl("input", {value: this.filter}, (el) => {
+          el.createEl('input', { value: this.filter }, (el) => {
             el.addClass('todo-filter-input');
-            el.setAttribute('placeholder','proj/person RexExp filter, case insensitive');
+            el.setAttribute('placeholder', 'proj/person RexExp filter, case insensitive');
             el.onchange = (e) => {
               this.setFilter((<HTMLInputElement>e.target).value);
             };
           });
         });
-        el.createEl('td',{}, (el) => {
+        el.createEl('td', {}, (el) => {
           el.addClass('todo-filter-col-button');
-          el.createEl("button", {text: "Filter"}, (el) => {
+          el.createEl('button', { text: 'Filter' }, (el) => {
             el.addClass('todo-filter-button');
           });
         });
@@ -125,7 +125,9 @@ export class TodoItemView extends ItemView {
     };
 
     container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Inbox)}`, (el) => {
-      el.appendChild(RenderIcon(Icon.Inbox, 'Inbox: No date set, no stakeholder action set, not a someday / maybe item.'));
+      el.appendChild(
+        RenderIcon(Icon.Inbox, 'Inbox: No date set, no stakeholder action set, not a someday / maybe item.'),
+      );
       el.onClickEvent(() => setActivePane(TodoItemViewPane.Inbox));
     });
 
@@ -145,7 +147,12 @@ export class TodoItemView extends ItemView {
     });
 
     container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Stakeholder)}`, (el) => {
-      el.appendChild(RenderIcon(Icon.Stakeholder, 'Stakeholder actions: discussWith, promisedTo, waitingFor. Only items that have a valid project or person will show up here. Stakeholder actions without project or person are in the Inbox.'));
+      el.appendChild(
+        RenderIcon(
+          Icon.Stakeholder,
+          'Stakeholder actions: discussWith, promisedTo, waitingFor. Only items that have a valid project or person will show up here. Stakeholder actions without project or person are in the Inbox.',
+        ),
+      );
       el.onClickEvent(() => setActivePane(TodoItemViewPane.Stakeholder));
     });
 
@@ -156,53 +163,56 @@ export class TodoItemView extends ItemView {
   }
 
   private renderItems(container: HTMLDivElement) {
-    const todosToRender = this.props.todos
-                            .filter(this.filterForState, this)
-                            .sort(this.sortByActionDate);
-    todosToRender
-      .forEach((todo,index) => {
-        if(index>0) {
-          if( (todo.isWaitingForNote && todosToRender[index-1].isDiscussWithNote) || 
-              (todo.isPromisedToNote && 
-                (todosToRender[index-1].isWaitingForNote || todosToRender[index-1].isDiscussWithNote)) ||
-              (!todo.isPromisedToNote && !todo.isWaitingForNote && !todo.isDiscussWithNote && 
-                (todosToRender[index-1].isWaitingForNote || todosToRender[index-1].isDiscussWithNote || todosToRender[index-1].isPromisedToNote)) ) {
-            container.createEl('hr', {} ,(el) => {
-              el.addClass('todo-item-view-divider');
-            });
-          }
-        } 
-        container.createDiv('todo-item-view-item', (el) => {
-          el.createDiv('todo-item-view-item-checkbox', (el) => {
-            el.createEl('input', { type: 'checkbox' }, (el) => {
-              el.checked = todo.status === TodoItemStatus.Done;
-              el.onClickEvent(() => {
-                this.toggleTodo(todo);
-              });
-            });
+    const todosToRender = this.props.todos.filter(this.filterForState, this).sort(this.sortByActionDate);
+    todosToRender.forEach((todo, index) => {
+      if (index > 0) {
+        if (
+          (todo.isWaitingForNote && todosToRender[index - 1].isDiscussWithNote) ||
+          (todo.isPromisedToNote &&
+            (todosToRender[index - 1].isWaitingForNote || todosToRender[index - 1].isDiscussWithNote)) ||
+          (!todo.isPromisedToNote &&
+            !todo.isWaitingForNote &&
+            !todo.isDiscussWithNote &&
+            (todosToRender[index - 1].isWaitingForNote ||
+              todosToRender[index - 1].isDiscussWithNote ||
+              todosToRender[index - 1].isPromisedToNote))
+        ) {
+          container.createEl('hr', {}, (el) => {
+            el.addClass('todo-item-view-divider');
           });
-          el.createDiv('todo-item-view-item-description', (el) => {
-            MarkdownRenderer.renderMarkdown(todo.description, el, todo.sourceFilePath, this);
-          });
-          el.createDiv('todo-item-view-item-link', (el) => {
-            el.appendChild(RenderIcon(Icon.Reveal, 'Open file'));
+        }
+      }
+      container.createDiv('todo-item-view-item', (el) => {
+        el.createDiv('todo-item-view-item-checkbox', (el) => {
+          el.createEl('input', { type: 'checkbox' }, (el) => {
+            el.checked = todo.status === TodoItemStatus.Done;
             el.onClickEvent(() => {
-              this.openFile(todo);
+              this.toggleTodo(todo);
             });
           });
         });
+        el.createDiv('todo-item-view-item-description', (el) => {
+          MarkdownRenderer.renderMarkdown(todo.description, el, todo.sourceFilePath, this);
+        });
+        el.createDiv('todo-item-view-item-link', (el) => {
+          el.appendChild(RenderIcon(Icon.Reveal, 'Open file'));
+          el.onClickEvent(() => {
+            this.openFile(todo);
+          });
+        });
       });
+    });
   }
 
   private filterForState(value: TodoItem, _index: number, _array: TodoItem[]): boolean {
-    const isPersonMatch = value.person.match(this.filterRegexp) != null; 
-    const isProjectMatch = value.project.match(this.filterRegexp) != null;   
-    const isFilterSet = this.filter!="";
-    const hasPersonOrProject = value.person!='' || value.project!='';
+    const isPersonMatch = value.person.match(this.filterRegexp) != null;
+    const isProjectMatch = value.project.match(this.filterRegexp) != null;
+    const isFilterSet = this.filter != '';
+    const hasPersonOrProject = value.person != '' || value.project != '';
     const isPeopleActionNote = value.isDiscussWithNote || value.isWaitingForNote || value.isPromisedToNote;
     if (!isFilterSet || isPersonMatch || isProjectMatch) {
       const isToday = (date: Date) => {
-        let today = new Date();
+        const today = new Date();
         return (
           date.getDate() == today.getDate() &&
           date.getMonth() == today.getMonth() &&
@@ -211,7 +221,7 @@ export class TodoItemView extends ItemView {
       };
 
       const isBeforeToday = (date: Date) => {
-        let today = (new Date())
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
       };
@@ -222,7 +232,13 @@ export class TodoItemView extends ItemView {
 
       switch (this.state.activePane) {
         case TodoItemViewPane.Inbox:
-          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isAgingNote && !(isPeopleActionNote && hasPersonOrProject);
+          return (
+            !value.isSomedayMaybeNote &&
+            !isTodayNote &&
+            !isScheduledNote &&
+            !isAgingNote &&
+            !(isPeopleActionNote && hasPersonOrProject)
+          );
         case TodoItemViewPane.Scheduled:
           return isScheduledNote;
         case TodoItemViewPane.Someday:
@@ -230,7 +246,7 @@ export class TodoItemView extends ItemView {
         case TodoItemViewPane.Today:
           return isTodayNote;
         case TodoItemViewPane.Aging:
-            return isAgingNote;
+          return isAgingNote;
         case TodoItemViewPane.Stakeholder:
           return hasPersonOrProject && isPeopleActionNote;
       }
@@ -256,7 +272,7 @@ export class TodoItemView extends ItemView {
       }
       if (b.isPromisedToNote && !a.isDiscussWithNote && !a.isWaitingForNote) {
         return 1;
-      }     
+      }
 
       if (a.isSomedayMaybeNote && !b.isSomedayMaybeNote) {
         return -1;

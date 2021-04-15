@@ -1,5 +1,5 @@
 import { TodoItem, TodoItemStatus } from '../model/TodoItem';
-import { TodoItemIndexProps} from '../model/TodoIndex'
+import { TodoItemIndexProps } from '../model/TodoIndex';
 
 export class TodoParser {
   props: TodoItemIndexProps;
@@ -22,13 +22,16 @@ export class TodoParser {
     const dateMatches = description.match(this.props.dateRegexp);
     let actionDate = undefined;
     if (dateMatches != null) {
-      actionDate = dateMatches.length > 3 ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0) : undefined;
-    }  
+      actionDate =
+        dateMatches.length > 3
+          ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2]) - 1, parseInt(dateMatches[3]), 0, 0, 0, 0)
+          : undefined;
+    }
     const personMatches = description.match(this.props.personRegexp);
-    const person = personMatches != null ? personMatches[1] : "";
+    const person = personMatches != null ? personMatches[1] : '';
 
     const projectMatches = description.match(this.props.projectRegexp);
-    const project = projectMatches != null ? projectMatches[1] : "";
+    const project = projectMatches != null ? projectMatches[1] : '';
 
     return new TodoItem(
       status,

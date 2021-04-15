@@ -1,16 +1,16 @@
 import { TodoItemStatus } from './TodoItem';
 import { TodoParser } from './TodoParser';
-import { TodoItemIndexProps} from '../model/TodoIndex'
+import { TodoItemIndexProps } from '../model/TodoIndex';
 
 const props = {
-  personRegexp:        new RegExp('\\[{2}(People\\/*.)\\]{2}'),
-  projectRegexp:       new RegExp('\\[{2}(Projects\\/*.)\\]{2}'),
-  dateRegexp:          new RegExp('#(\\d{4}\\/\\d{2}\\/\\d{2})'),
-  discussWithRegexp:   new RegExp('#(discussWith)'),
-  waitingForRegexp:    new RegExp('#(waitingFor)'),
-  promisedToRegexp:    new RegExp('#(promisedTo)'),
-  somedayMaybeRegexp:  new RegExp('#(someday)')
-}
+  personRegexp: new RegExp('\\[{2}(People\\/*.)\\]{2}'),
+  projectRegexp: new RegExp('\\[{2}(Projects\\/*.)\\]{2}'),
+  dateRegexp: new RegExp('#(\\d{4}\\/\\d{2}\\/\\d{2})'),
+  discussWithRegexp: new RegExp('#(discussWith)'),
+  waitingForRegexp: new RegExp('#(waitingFor)'),
+  promisedToRegexp: new RegExp('#(promisedTo)'),
+  somedayMaybeRegexp: new RegExp('#(someday)'),
+};
 const todoParser = new TodoParser(props);
 
 test('parsing an outstanding todo', async () => {
