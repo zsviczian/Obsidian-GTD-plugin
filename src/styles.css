@@ -1,0 +1,92 @@
+div.todo-item-view-container {
+}
+
+input.todo-filter-input {
+    width: 100%;
+}
+
+button.todo-filter-button {
+    white-space: nowrap;
+    margin: 0;
+}
+
+
+hr.todo-item-view-divider {
+    margin:0;
+}
+
+div.todo-item-view-search {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+div.todo-item-view-toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+}
+
+div.todo-item-view-toolbar-item {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
+
+div.todo-item-view-sort {
+    padding-left: 8px;
+    cursor: pointer;
+}
+
+div.todo-item-view-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+div.todo-item-view-item {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+div.todo-item-view-item p {
+    margin: 0;
+}
+
+div.todo-item-view-item-checkbox {
+    flex-basis: 25px;
+    flex-shrink: 0;
+}
+
+div.todo-item-view-item-description {
+    flex-grow: 1;
+    padding-left: 4px;
+}
+
+div.todo-item-view-item-link {
+    flex-basis: 25px;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding-left: 8px;
+}
+
+div.todo-item-view-item-link svg, div.todo-item-view-toolbar-item, div.todo-item-view-sort svg {
+    fill: #cccccc;
+}
+
+div.todo-item-view-toolbar-item.active svg {
+    fill: var(--interactive-accent);
+}
+
+div.todo-item-view-sort.none svg {
+    stroke: var(--text-normal);
+}
+
+div.todo-item-view-sort.active svg {
+    stroke: var(--interactive-accent);
+}

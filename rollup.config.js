@@ -16,7 +16,7 @@ https://github.com/zsviczian/obsidian-stakeholder-actions
 `;
 
 export default {
-  input: 'main.ts',
+  input: 'src/main.ts',
   output: {
     dir: isProd ? './dist' : '.',
     sourcemap: 'inline',
@@ -29,8 +29,8 @@ export default {
   plugins: [typescript(), 
             nodeResolve({ browser: true }), 
             commonjs(),
-            copyAndWatch('styles.css','styles.css',isProd),
-            copyAndWatch('manifest.json','manifest.json',isProd)],
+            copyAndWatch('src/styles.css','styles.css',true),
+            copyAndWatch('src/manifest.json','manifest.json',true)],
 };
 
 function copyAndWatch(fileIn, fileOut, isProd) {
