@@ -1,5 +1,5 @@
-import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoItemIndexProps } from '../model/TodoIndex';
+import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 
 export class TodoParser {
   props: TodoItemIndexProps;
@@ -8,13 +8,18 @@ export class TodoParser {
     this.props = props;
   }
 
-  async parseTasks(filePath: string, fileContents: string): Promise<TodoItem[]> {
+  async parseTasks(
+    filePath: string,
+    fileContents: string,
+  ): Promise<TodoItem[]> {
     const pattern = /(-|\*) \[(\s|x)?\]\s(.*)/g;
-    return [...fileContents.matchAll(pattern)].map((task) => this.parseTask(filePath, task));
+    return [...fileContents.matchAll(pattern)].map(task =>
+      this.parseTask(filePath, task),
+    );
   }
 
   private parseTask(filePath: string, entry: RegExpMatchArray): TodoItem {
-    //debugger;
+    // debugger;
     const todoItemOffset = 2; // Strip off `-|* `
     const status = entry[2] === 'x' ? TodoItemStatus.Done : TodoItemStatus.Todo;
     const description = entry[3];
@@ -24,7 +29,15 @@ export class TodoParser {
     if (dateMatches != null) {
       actionDate =
         dateMatches.length > 3
-          ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2]) - 1, parseInt(dateMatches[3]), 0, 0, 0, 0)
+          ? new Date(
+              parseInt(dateMatches[1]),
+              parseInt(dateMatches[2]) - 1,
+              parseInt(dateMatches[3]),
+              0,
+              0,
+              0,
+              0,
+            )
           : undefined;
     }
     const personMatches = description.match(this.props.personRegexp);

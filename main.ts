@@ -3,7 +3,11 @@ import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf } from 'obsidian';
 import { VIEW_TYPE_TODO } from './constants';
 import { TodoIndex, TodoItemIndexProps } from './model/TodoIndex';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
-import { ActionTrackerSettings, ActionTrackerSettingTab, DEFAULT_SETTINGS } from './settings';
+import {
+  ActionTrackerSettings,
+  ActionTrackerSettingTab,
+  DEFAULT_SETTINGS,
+} from './settings';
 import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
 
 export default class ActionTrackerPlugin extends Plugin {
@@ -20,10 +24,18 @@ export default class ActionTrackerPlugin extends Plugin {
       personRegexp: new RegExp(this.getSettingValue('personRegexpString')),
       projectRegexp: new RegExp(this.getSettingValue('projectRegexpString')),
       dateRegexp: new RegExp(this.getSettingValue('dateRegexpString')),
-      discussWithRegexp: new RegExp(this.getSettingValue('discussWithRegexpString')),
-      waitingForRegexp: new RegExp(this.getSettingValue('waitingForRegexpString')),
-      promisedToRegexp: new RegExp(this.getSettingValue('promisedToRegexpString')),
-      somedayMaybeRegexp: new RegExp(this.getSettingValue('somedayMaybeRegexpString')),
+      discussWithRegexp: new RegExp(
+        this.getSettingValue('discussWithRegexpString'),
+      ),
+      waitingForRegexp: new RegExp(
+        this.getSettingValue('waitingForRegexpString'),
+      ),
+      promisedToRegexp: new RegExp(
+        this.getSettingValue('promisedToRegexpString'),
+      ),
+      somedayMaybeRegexp: new RegExp(
+        this.getSettingValue('somedayMaybeRegexpString'),
+      ),
     };
   }
 
@@ -32,7 +44,11 @@ export default class ActionTrackerPlugin extends Plugin {
 
     await this.loadSettings();
 
-    this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this), this.getTodoItemIndexProps());
+    this.todoIndex = new TodoIndex(
+      this.app.vault,
+      this.tick.bind(this),
+      this.getTodoItemIndexProps(),
+    );
 
     this.registerView(VIEW_TYPE_TODO, (leaf: WorkspaceLeaf) => {
       const todos: TodoItem[] = [];
@@ -56,13 +72,22 @@ export default class ActionTrackerPlugin extends Plugin {
       this.initLeaf();
       await this.prepareIndex();
     } else {
-      this.registerEvent(this.app.workspace.on('layout-ready', this.initLeaf.bind(this)));
-      this.registerEvent(this.app.workspace.on('layout-ready', async () => await this.prepareIndex()));
+      this.registerEvent(
+        this.app.workspace.on('layout-ready', this.initLeaf.bind(this)),
+      );
+      this.registerEvent(
+        this.app.workspace.on(
+          'layout-ready',
+          async () => await this.prepareIndex(),
+        ),
+      );
     }
   }
 
   onunload(): void {
-    this.app.workspace.getLeavesOfType(VIEW_TYPE_TODO).forEach(leaf => leaf.detach());
+    this.app.workspace
+      .getLeavesOfType(VIEW_TYPE_TODO)
+      .forEach(leaf => leaf.detach());
   }
 
   initLeaf(): void {
@@ -96,7 +121,9 @@ export default class ActionTrackerPlugin extends Plugin {
     await this.todoIndex.reloadIndex(this.getTodoItemIndexProps());
   }
 
-  getSettingValue<K extends keyof ActionTrackerSettings>(setting: K): ActionTrackerSettings[K] {
+  getSettingValue<K extends keyof ActionTrackerSettings>(
+    setting: K,
+  ): ActionTrackerSettings[K] {
     return this.settings[setting];
   }
 }

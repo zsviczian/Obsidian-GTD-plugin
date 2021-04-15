@@ -4,10 +4,12 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
+  plugins: ['prettier'],
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
     'plugin:prettier/recommended', // Should be last
   ],
-  rules: {},
+  rules: {
+    'prettier/prettier': 'error',
+  },
 };
