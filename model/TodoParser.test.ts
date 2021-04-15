@@ -5,6 +5,7 @@ import { TodoItemIndexProps} from '../model/TodoIndex'
 const props = {
   personRegexp:        new RegExp('\\[{2}(People\\/*.)\\]{2}'),
   projectRegexp:       new RegExp('\\[{2}(Projects\\/*.)\\]{2}'),
+  miscRegexp:          new RegExp('(.*)'),
   dateRegexp:          new RegExp('#(\\d{4}\\/\\d{2}\\/\\d{2})'),
   discussWithRegexp:   new RegExp('#(discussWith)'),
   waitingForRegexp:    new RegExp('#(waitingFor)'),

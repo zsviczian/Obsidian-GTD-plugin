@@ -4,7 +4,7 @@
   "description": "GTD action tracker",
   "main": "main.js",
   "scripts": {
-    "build": "rollup --config rollup.config.js",
+    "build": "rollup --config rollup.config.js --environment BUILD:production",
     "dev": "rollup --config rollup.config.js -w",
     "lint": "eslint '**/*.{js,ts}' --fix",
     "test": "jest"

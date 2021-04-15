@@ -23,6 +23,7 @@ export class TodoItem {
   public description: string;
   public person: string;
   public project: string;
+  public misc: string;
   public actionDate?: Date;
   public isSomedayMaybeNote: boolean;
   public isDiscussWithNote: boolean;
@@ -34,6 +35,7 @@ export class TodoItem {
     description: string,
     person: string,
     project: string,
+    misc: string,
     isSomedayMaybeNote: boolean,
     isDiscussWithNote: boolean,
     isWaitingForNote: boolean,
@@ -47,6 +49,7 @@ export class TodoItem {
     this.description = description;
     this.person = person;
     this.project = project;
+    this.misc = misc;
     this.actionDate = actionDate;
     this.isSomedayMaybeNote = isSomedayMaybeNote;
     this.isDiscussWithNote = isDiscussWithNote;

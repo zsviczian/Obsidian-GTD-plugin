@@ -1,9 +1,10 @@
-//npm run build -- --environment BUILD:production
+//npm run build
 //npm run dev
 
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import fs from 'fs';
 
 const isProd = (process.env.BUILD === 'production');
 const banner = 
@@ -25,5 +26,27 @@ export default {
     banner
   },
   external: ['obsidian'],
-  plugins: [typescript(), nodeResolve({ browser: true }), commonjs()],
+  plugins: [typescript(), 
+            nodeResolve({ browser: true }), 
+            commonjs(),
+            copyAndWatch('styles.css','styles.css',isProd),
+            copyAndWatch('manifest.json','manifest.json',isProd)],
 };
+
+function copyAndWatch(fileIn, fileOut, isProd) {
+  if (isProd) 
+    return {
+        name: 'copy-and-watch',
+        async buildStart() {
+            this.addWatchFile(fileIn);
+        },
+        async generateBundle() {
+            this.emitFile({
+                type: 'asset',
+                fileName: fileOut,
+                source: fs.readFileSync(fileIn)
+            });
+        }
+    }
+  else return null;
+}

@@ -5,6 +5,7 @@ import { TodoParser } from '../model/TodoParser';
 export interface TodoItemIndexProps {
   personRegexp:       RegExp;
   projectRegexp:      RegExp;
+  miscRegexp:         RegExp;
   dateRegexp:         RegExp;
   discussWithRegexp:  RegExp;
   waitingForRegexp:   RegExp;

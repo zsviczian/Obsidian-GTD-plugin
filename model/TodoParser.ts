@@ -22,7 +22,11 @@ export class TodoParser {
     const dateMatches = description.match(this.props.dateRegexp);
     let actionDate = undefined;
     if (dateMatches != null) {
-      actionDate = dateMatches.length > 3 ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0) : undefined;
+      if(dateMatches.length == 4) {
+        actionDate = new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0);
+      } else if (dateMatches.length == 2) {
+        actionDate = new Date(dateMatches[1]);
+      } 
     }  
     const personMatches = description.match(this.props.personRegexp);
     const person = personMatches != null ? personMatches[1] : "";
@@ -30,11 +34,15 @@ export class TodoParser {
     const projectMatches = description.match(this.props.projectRegexp);
     const project = projectMatches != null ? projectMatches[1] : "";
 
+    const miscMatches = description.match(this.props.miscRegexp);
+    const misc = miscMatches != null ? miscMatches.length == 2 ? miscMatches[1] : "" : "";
+
     return new TodoItem(
       status,
       description,
-      person,
-      project,
+      person.toLowerCase(),
+      project.toLowerCase(),
+      misc.toLowerCase(),
       description.match(this.props.somedayMaybeRegexp) != null,
       description.match(this.props.discussWithRegexp) != null,
       description.match(this.props.waitingForRegexp) != null,

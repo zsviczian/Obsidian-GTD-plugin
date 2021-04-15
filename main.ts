@@ -19,6 +19,7 @@ export default class ActionTrackerPlugin extends Plugin {
     return {
       personRegexp: new RegExp (this.getSettingValue('personRegexpString')),
       projectRegexp: new RegExp (this.getSettingValue('projectRegexpString')),
+      miscRegexp:    new RegExp (this.getSettingValue('miscRegexpString')),
       dateRegexp: new RegExp (this.getSettingValue('dateRegexpString')),
       discussWithRegexp: new RegExp (this.getSettingValue('discussWithRegexpString')),
       waitingForRegexp: new RegExp (this.getSettingValue('waitingForRegexpString')),
@@ -45,6 +46,18 @@ export default class ActionTrackerPlugin extends Plugin {
         toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => {
           this.todoIndex.setStatus(todo, newStatus);
         },
+        isInboxVisible:       this.getSettingValue('isInboxVisible'),
+        isAgingVisible:       this.getSettingValue('isAgingVisible'),
+        isTodayVisible:       this.getSettingValue('isTodayVisible'),
+        isScheduledVisible:   this.getSettingValue('isScheduledVisible'),
+        isStakeholderVisible: this.getSettingValue('isStakeholderVisible'),
+        isSomedayVisible:     this.getSettingValue('isSomedayVisible'),
+        inboxTooltip:         this.getSettingValue('inboxTooltip'),
+        agingTooltip:         this.getSettingValue('agingTooltip'),
+        todayTooltip:         this.getSettingValue('todayTooltip'),
+        scheduledTooltip:     this.getSettingValue('scheduledTooltip'),
+        stakeholderTooltip:   this.getSettingValue('stakeholderTooltip'),
+        somedayTooltip:       this.getSettingValue('somedayTooltip'),
       };
       this.view = new TodoItemView(leaf, props);
       return this.view;
@@ -91,10 +104,31 @@ export default class ActionTrackerPlugin extends Plugin {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
-	async saveSettings() {
+	async saveFilterSettings() {
 		await this.saveData(this.settings);
     await this.todoIndex.reloadIndex(this.getTodoItemIndexProps());
 	}
+
+  async saveViewDisplaySettings() {
+		await this.saveData(this.settings);
+    this.view.setDisplayProps({
+      todos: null,
+      openFile: null,
+      toggleTodo: null,
+      isInboxVisible:       this.getSettingValue('isInboxVisible'),
+      isAgingVisible:       this.getSettingValue('isAgingVisible'),
+      isTodayVisible:       this.getSettingValue('isTodayVisible'),
+      isScheduledVisible:   this.getSettingValue('isScheduledVisible'),
+      isStakeholderVisible: this.getSettingValue('isStakeholderVisible'),
+      isSomedayVisible:     this.getSettingValue('isSomedayVisible'),
+      inboxTooltip:         this.getSettingValue('inboxTooltip'),
+      agingTooltip:         this.getSettingValue('agingTooltip'),
+      todayTooltip:         this.getSettingValue('todayTooltip'),
+      scheduledTooltip:     this.getSettingValue('scheduledTooltip'),
+      stakeholderTooltip:   this.getSettingValue('stakeholderTooltip'),
+      somedayTooltip:       this.getSettingValue('somedayTooltip'),
+    });
+  }
 
   getSettingValue<K extends keyof ActionTrackerSettings>(setting: K): ActionTrackerSettings[K] {
     return this.settings[setting]
