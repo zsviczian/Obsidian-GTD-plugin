@@ -14,7 +14,7 @@ https://github.com/zsviczian/obsidian-stakeholder-actions
 `;
 
 export default {
-  input: 'main.ts',
+  input: 'src/main.ts',
   output: {
     dir: isProd ? './dist' : '.',
     sourcemap: 'inline',
