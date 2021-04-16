@@ -4,6 +4,7 @@ import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
 import { TodoIndex,TodoItemIndexProps } from './model/TodoIndex';
 import {DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab} from './settings';
+import { stringify } from 'querystring';
 
 
 export default class ActionTrackerPlugin extends Plugin {
@@ -25,6 +26,8 @@ export default class ActionTrackerPlugin extends Plugin {
       waitingForRegexp: new RegExp (this.getSettingValue('waitingForRegexpString')),
       promisedToRegexp: new RegExp (this.getSettingValue('promisedToRegexpString')),
       somedayMaybeRegexp: new RegExp (this.getSettingValue('somedayMaybeRegexpString')),
+      excludePath: this.getSettingValue('excludePath'),
+      excludeFilenameFragment: this.getSettingValue('excludeFilenameFragment').toLowerCase(),
     };
   }
 

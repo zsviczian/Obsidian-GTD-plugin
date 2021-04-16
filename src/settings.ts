@@ -10,6 +10,8 @@ export interface ActionTrackerSettings {
   waitingForRegexpString:    string,
   promisedToRegexpString:    string,
   somedayMaybeRegexpString:  string,
+  excludePath:               string,
+  excludeFilenameFragment:   string,
   isInboxVisible:            boolean,
   isAgingVisible:            boolean,
   isTodayVisible:            boolean,
@@ -33,6 +35,8 @@ export const DEFAULT_SETTINGS: ActionTrackerSettings = {
   waitingForRegexpString:    '#(waitingFor)',
   promisedToRegexpString:    '#(promisedTo)',
   somedayMaybeRegexpString:  '#(someday)',
+  excludePath:                '',
+  excludeFilenameFragment:    '',
   isInboxVisible:            true,
   isAgingVisible:            true,
   isTodayVisible:            true,
@@ -179,7 +183,42 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           await this.plugin.saveFilterSettings();
         }));  
     
-    this.containerEl.createEl('h1', {text: 'View Configuration'});   
+
+
+
+    this.containerEl.createEl('h1', {text: 'Exclusions'});   
+    this.containerEl.createEl('p', {text: 'Settings to define which actions to exclude from the view.'});
+    new Setting(containerEl)
+      .setName('Exclude path')
+      .setDesc('Intended for excluding your Templates folder. The files in this folder and all sub-folders will be excluded by Obsidian-GTD. The value given in this setting '+
+               'is matched to the beginning of the filepath using .startsWith(). If you set this value to Temp, then '+
+               'all files on the filepath startring with the string given will be excluded. To stick with our example Temp will exclude all of the following folders: ' +
+               'Templates/, Template/, Temp/, etc. but will not exclude templates/ or temp/... Exclude folder names are case sensitive.')
+      .addText(text => text
+        .setPlaceholder('Templates/')
+        .setValue(this.plugin.settings.excludePath)
+        .onChange(async (value) => {
+          this.plugin.settings.excludePath = value;
+          await this.plugin.saveFilterSettings();
+        }));   
+
+    new Setting(containerEl)
+      .setName('Exclude filename fragment')
+      .setDesc('Intended for filtering out a special type of file that can be identified based on filename, such as checklists. If you name all your checklists '+
+               'with the word checklist in the file (e.g. "Holiday checklist.md", "Blog post checklist.md", "Checklist for Christmas.md", etc.), ' +
+               'those files will all be excluded. Uses .toLowerCase().includes() to filter elements, i.e. the filename fragment is '+
+               'case insensitive')
+      .addText(text => text
+        .setPlaceholder('checklist')
+        .setValue(this.plugin.settings.excludeFilenameFragment)
+        .onChange(async (value) => {
+          this.plugin.settings.excludeFilenameFragment = value;
+          await this.plugin.saveFilterSettings();
+        }));   
+
+
+
+    this.containerEl.createEl('h1', {text: 'Configure Views'});   
     this.containerEl.createEl('p', {text: 'You can show/hide specific views based on your needs. ' +
                                           'As you customize some of the selectors, views may slightly change their meaning. You can update '+
                                           'the tooltip text to help you remember your intent with each view.'});

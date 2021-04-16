@@ -10,7 +10,9 @@ const props = {
   discussWithRegexp:   new RegExp('#(discussWith)'),
   waitingForRegexp:    new RegExp('#(waitingFor)'),
   promisedToRegexp:    new RegExp('#(promisedTo)'),
-  somedayMaybeRegexp:  new RegExp('#(someday)')
+  somedayMaybeRegexp:  new RegExp('#(someday)'),
+  excludePath: '',
+  excludeFilenameFragment: '',
 }
 const todoParser = new TodoParser(props);
 

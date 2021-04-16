@@ -11,6 +11,8 @@ export interface TodoItemIndexProps {
   waitingForRegexp:   RegExp;
   promisedToRegexp:   RegExp;
   somedayMaybeRegexp: RegExp;
+  excludePath:        string;
+  excludeFilenameFragment: string;
 }
 
 export class TodoIndex {
@@ -39,10 +41,13 @@ export class TodoIndex {
 
     const markdownFiles = this.vault.getMarkdownFiles();
     for (const file of markdownFiles) {
-      const todos = await this.parseTodosInFile(file);
-      numberOfTodos += todos.length;
-      if (todos.length > 0) {
-        todoMap.set(file.path, todos);
+      if(!(this.props.excludePath!='' && file.path.startsWith(this.props.excludePath)) &&
+         !(this.props.excludeFilenameFragment!='' && file.path.toLowerCase().includes(this.props.excludeFilenameFragment))) {
+        const todos = await this.parseTodosInFile(file);
+        numberOfTodos += todos.length;
+        if (todos.length > 0) {
+          todoMap.set(file.path, todos);
+        }
       }
     }
 
