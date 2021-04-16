@@ -1,6 +1,6 @@
 import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf, } from 'obsidian';
 import { VIEW_TYPE_TODO } from './constants';
-import { TodoItemView, TodoItemViewProps } from './ui/TodoItemView';
+import { TodoItemView, TodoItemViewProps, TodoItemViewPane } from './ui/TodoItemView';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
 import { TodoIndex,TodoItemIndexProps } from './model/TodoIndex';
 import {DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab} from './settings';
@@ -69,6 +69,42 @@ export default class ActionTrackerPlugin extends Plugin {
     });
 
     this.addSettingTab(new ActionTrackerSettingTab(this.app, this));
+
+    this.addCommand({
+      id: "show-inbox-view",
+      name: "Inbox View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Inbox}),
+    });
+
+    this.addCommand({
+      id: "show-overdue-view",
+      name: "Overdue View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Aging}),
+    });
+
+    this.addCommand({
+      id: "show-today-view",
+      name: "Today View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Today}),
+    });
+
+    this.addCommand({
+      id: "show-scheduled-view",
+      name: "Scheduled View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Scheduled}),
+    });
+
+    this.addCommand({
+      id: "show-context-actions-view",
+      name: "Context Actions View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Stakeholder}),
+    });
+
+    this.addCommand({
+      id: "show-someday-view",
+      name: "Someday/Maybe View",
+      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Someday}),
+    });
 
     if (this.app.workspace.layoutReady) {
       this.initLeaf();

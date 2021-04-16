@@ -3,7 +3,7 @@ import { VIEW_TYPE_TODO } from '../constants';
 import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { RenderIcon, Icon } from '../ui/icons';
 
-enum TodoItemViewPane {
+export enum TodoItemViewPane {
   Aging,
   Today,
   Scheduled,
@@ -111,7 +111,7 @@ export class TodoItemView extends ItemView {
     this.render();
   }
 
-  private setViewState(newState: TodoItemViewState) {
+  public setViewState(newState: TodoItemViewState) {
     this.state = newState;
     if(newState.activePane == TodoItemViewPane.Aging || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
       this.sortState = {state: TodoSortStates.DateAsc};
