@@ -27,7 +27,7 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 ![image](https://user-images.githubusercontent.com/14358394/115065354-50cdc600-9eee-11eb-9d8a-81af09a28d66.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065369-562b1080-9eee-11eb-8123-54abd7a6ef8a.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065382-5aefc480-9eee-11eb-91f6-430096e4a05a.png)
-![image](https://user-images.githubusercontent.com/14358394/115065405-617e3c00-9eee-11eb-8a54-2a9b33e853ed.png)
+![image](https://user-images.githubusercontent.com/14358394/115065636-aa35f500-9eee-11eb-9e77-6d630fa0cd1b.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065473-78bd2980-9eee-11eb-9533-9cd0d04a44e2.png)
 
 
