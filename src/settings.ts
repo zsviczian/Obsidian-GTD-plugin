@@ -4,7 +4,7 @@ import type ActionTrackerPlugin from "./main";
 export interface ActionTrackerSettings {
 	personRegexpString:        string,
   projectRegexpString:       string,
-  locationRegexpString:       string,
+  locationRegexpString:      string,
   miscRegexpString:          string,
   dateRegexpString:          string,
   discussWithRegexpString:   string,
@@ -262,7 +262,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         let t = text.setPlaceholder(DEFAULT_SETTINGS.inboxTooltip)
         .setValue(this.plugin.settings.inboxTooltip)
         .onChange(async (value) => {
-          this.plugin.settings.inboxTooltip = value;
+          this.plugin.settings.inboxTooltip = value == '' ? DEFAULT_SETTINGS.inboxTooltip : value;
           await this.plugin.saveViewDisplaySettings();
         });
         t.inputEl.setAttr("rows", 4);
@@ -284,7 +284,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           let t = text.setPlaceholder(DEFAULT_SETTINGS.agingTooltip)
           .setValue(this.plugin.settings.agingTooltip)
           .onChange(async (value) => {
-            this.plugin.settings.agingTooltip = value;
+            this.plugin.settings.agingTooltip = value == '' ? DEFAULT_SETTINGS.agingTooltip : value;
             await this.plugin.saveViewDisplaySettings();
           });
           t.inputEl.setAttr("rows", 4);
@@ -306,7 +306,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
             let t = text.setPlaceholder(DEFAULT_SETTINGS.todayTooltip)
             .setValue(this.plugin.settings.todayTooltip)
             .onChange(async (value) => {
-              this.plugin.settings.todayTooltip = value;
+              this.plugin.settings.todayTooltip = value == '' ? DEFAULT_SETTINGS.todayTooltip : value;
               await this.plugin.saveViewDisplaySettings();
             });
             t.inputEl.setAttr("rows", 4);
@@ -328,7 +328,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
               let t = text.setPlaceholder(DEFAULT_SETTINGS.scheduledTooltip)
               .setValue(this.plugin.settings.scheduledTooltip)
               .onChange(async (value) => {
-                this.plugin.settings.scheduledTooltip = value;
+                this.plugin.settings.scheduledTooltip = value == '' ? DEFAULT_SETTINGS.scheduledTooltip : value;
                 await this.plugin.saveViewDisplaySettings();
               });
               t.inputEl.setAttr("rows", 4);
@@ -350,7 +350,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
               let t = text.setPlaceholder(DEFAULT_SETTINGS.stakeholderTooltip)
               .setValue(this.plugin.settings.stakeholderTooltip)
               .onChange(async (value) => {
-                this.plugin.settings.stakeholderTooltip = value;
+                this.plugin.settings.stakeholderTooltip = value == '' ? DEFAULT_SETTINGS.stakeholderTooltip : value;
                 await this.plugin.saveViewDisplaySettings();
               });
               t.inputEl.setAttr("rows", 4);
@@ -372,7 +372,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
                 let t = text.setPlaceholder(DEFAULT_SETTINGS.somedayTooltip)
                 .setValue(this.plugin.settings.somedayTooltip)
                 .onChange(async (value) => {
-                  this.plugin.settings.somedayTooltip = value;
+                  this.plugin.settings.somedayTooltip = value == '' ? DEFAULT_SETTINGS.somedayTooltip : value;
                   await this.plugin.saveViewDisplaySettings();
                 });
                 t.inputEl.setAttr("rows", 4);

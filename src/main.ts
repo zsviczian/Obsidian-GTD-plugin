@@ -18,15 +18,17 @@ export default class ActionTrackerPlugin extends Plugin {
 
   private getTodoItemIndexProps() : TodoItemIndexProps {
     return {
-      personRegexp: new RegExp (this.getSettingValue('personRegexpString')),
-      projectRegexp: new RegExp (this.getSettingValue('projectRegexpString')),
-      miscRegexp:    new RegExp (this.getSettingValue('miscRegexpString')),
-      dateRegexp: new RegExp (this.getSettingValue('dateRegexpString')),
-      discussWithRegexp: new RegExp (this.getSettingValue('discussWithRegexpString')),
-      waitingForRegexp: new RegExp (this.getSettingValue('waitingForRegexpString')),
-      promisedToRegexp: new RegExp (this.getSettingValue('promisedToRegexpString')),
-      somedayMaybeRegexp: new RegExp (this.getSettingValue('somedayMaybeRegexpString')),
-      excludePath: this.getSettingValue('excludePath'),
+      personRegexp:            new RegExp (this.getSettingValue('personRegexpString')),
+      projectRegexp:           new RegExp (this.getSettingValue('projectRegexpString')),
+      locationRegexp:          new RegExp (this.getSettingValue('locationRegexpString')),
+      miscRegexp:              new RegExp (this.getSettingValue('miscRegexpString')),
+      dateRegexp:              new RegExp (this.getSettingValue('dateRegexpString')),
+      discussWithRegexp:       new RegExp (this.getSettingValue('discussWithRegexpString')),
+      waitingForRegexp:        new RegExp (this.getSettingValue('waitingForRegexpString')),
+      promisedToRegexp:        new RegExp (this.getSettingValue('promisedToRegexpString')),
+      somedayMaybeRegexp:      new RegExp (this.getSettingValue('somedayMaybeRegexpString')),
+      excludeTagRegexp:        new RegExp (this.getSettingValue('excludeTagRegexpString')),
+      excludePath:             this.getSettingValue('excludePath'),
       excludeFilenameFragment: this.getSettingValue('excludeFilenameFragment').toLowerCase(),
     };
   }

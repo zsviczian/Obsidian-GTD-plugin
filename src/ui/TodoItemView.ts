@@ -356,11 +356,12 @@ export class TodoItemView extends ItemView {
   private filterForState(value: TodoItem, _index: number, _array: TodoItem[]): boolean {
     const isPersonMatch = value.person.match(this.filterRegexp) != null; 
     const isProjectMatch = value.project.match(this.filterRegexp) != null; 
+    const isLocationMatch = value.location.match(this.filterRegexp) != null; 
     const isMiscMatch = value.misc.match(this.filterRegexp) != null;  
     const isFilterSet = this.filter!="";
-    const hasPersonOrProject = value.person!='' || value.project!='';
+    const hasContext = value.person!='' || value.project!='' || value.location!='';
     const isPeopleActionNote = value.isDiscussWithNote || value.isWaitingForNote || value.isPromisedToNote;
-    if (!isFilterSet || isPersonMatch || isProjectMatch || isMiscMatch) {
+    if (!isFilterSet || isPersonMatch || isProjectMatch || isMiscMatch || isLocationMatch) {
       const isToday = (date: Date) => {
         let today = new Date();
         return (
@@ -382,7 +383,7 @@ export class TodoItemView extends ItemView {
 
       switch (this.state.activePane) {
         case TodoItemViewPane.Inbox:
-          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isAgingNote && !(isPeopleActionNote && hasPersonOrProject);
+          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isAgingNote && !(isPeopleActionNote && hasContext) ;
         case TodoItemViewPane.Scheduled:
           return isScheduledNote;
         case TodoItemViewPane.Someday:
@@ -392,7 +393,7 @@ export class TodoItemView extends ItemView {
         case TodoItemViewPane.Aging:
             return isAgingNote;
         case TodoItemViewPane.Stakeholder:
-          return hasPersonOrProject && isPeopleActionNote;
+          return hasContext && isPeopleActionNote ;
       }
     } else return false;
   }

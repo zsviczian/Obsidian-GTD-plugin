@@ -34,14 +34,21 @@ export class TodoParser {
     const projectMatches = description.match(this.props.projectRegexp);
     const project = projectMatches != null ? projectMatches[1] : "";
 
+    const locationMatches = description.match(this.props.locationRegexp);
+    const location = locationMatches != null ? locationMatches[1] : "";
+
     const miscMatches = description.match(this.props.miscRegexp);
     const misc = miscMatches != null ? miscMatches.length == 2 ? miscMatches[1] : "" : "";
 
+    const excludeMatches = description.match(this.props.excludeTagRegexp);
+    const exclude = excludeMatches != null ? excludeMatches.length == 2 ? true : false : false;
+
     return new TodoItem(
-      status,
+      exclude ? TodoItemStatus.Done : status, //items that include the excludeTag are treated as completed TODOs
       description,
       person.toLowerCase(),
       project.toLowerCase(),
+      location.toLowerCase(),
       misc.toLowerCase(),
       description.match(this.props.somedayMaybeRegexp) != null,
       description.match(this.props.discussWithRegexp) != null,

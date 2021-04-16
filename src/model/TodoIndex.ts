@@ -5,12 +5,14 @@ import { TodoParser } from '../model/TodoParser';
 export interface TodoItemIndexProps {
   personRegexp:       RegExp;
   projectRegexp:      RegExp;
+  locationRegexp:     RegExp;
   miscRegexp:         RegExp;
   dateRegexp:         RegExp;
   discussWithRegexp:  RegExp;
   waitingForRegexp:   RegExp;
   promisedToRegexp:   RegExp;
   somedayMaybeRegexp: RegExp;
+  excludeTagRegexp:   RegExp;
   excludePath:        string;
   excludeFilenameFragment: string;
 }
