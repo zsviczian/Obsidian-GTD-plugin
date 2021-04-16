@@ -4,6 +4,7 @@ import type ActionTrackerPlugin from "./main";
 export interface ActionTrackerSettings {
 	personRegexpString:        string,
   projectRegexpString:       string,
+  locationRegexpString:       string,
   miscRegexpString:          string,
   dateRegexpString:          string,
   discussWithRegexpString:   string,
@@ -12,6 +13,7 @@ export interface ActionTrackerSettings {
   somedayMaybeRegexpString:  string,
   excludePath:               string,
   excludeFilenameFragment:   string,
+  excludeTagRegexpString:    string,
   isInboxVisible:            boolean,
   isAgingVisible:            boolean,
   isTodayVisible:            boolean,
@@ -29,26 +31,28 @@ export interface ActionTrackerSettings {
 export const DEFAULT_SETTINGS: ActionTrackerSettings = {
 	personRegexpString:        '\\[{2}People\\/(.*?)\\]{2}',
   projectRegexpString:       '\\[{2}Projects\\/(.*?)\\]{2}',
+  locationRegexpString:      '\\[{2}Location\\/(.*?)\\]{2}',
   miscRegexpString:          '',
   dateRegexpString:          '#(\\d{4})\\/(\\d{2})\\/(\\d{2})',
   discussWithRegexpString:   '#(discussWith)',
   waitingForRegexpString:    '#(waitingFor)',
   promisedToRegexpString:    '#(promisedTo)',
   somedayMaybeRegexpString:  '#(someday)',
-  excludePath:                '',
-  excludeFilenameFragment:    '',
+  excludeTagRegexpString:    '',
+  excludePath:               '',
+  excludeFilenameFragment:   '',
   isInboxVisible:            true,
   isAgingVisible:            true,
   isTodayVisible:            true,
   isScheduledVisible:        true,
   isStakeholderVisible:      true,
   isSomedayVisible:          true,
-  inboxTooltip:              'Inbox: No date set, no stakeholder action set, not a someday / maybe item.',
-  agingTooltip:              'Aging',
-  todayTooltip:              'Scheduled for Today',
-  scheduledTooltip:          'Scheduled for a future date',
-  stakeholderTooltip:        'Stakeholder and Project actions: discussWith, promisedTo, waitingFor. Only items that have a valid project or person will show up here. Stakeholder actions without project or person are in the Inbox.',
-  somedayTooltip:            'Tagged as Someday / Maybe',
+  inboxTooltip:              'Inbox: Unclassified TODOs, i.e. without a date; without an Action Tag and a Context; without someday/maybe tag.',
+  agingTooltip:              'Overdue: Past the TODO\'s date.',
+  todayTooltip:              'Today: Scheduled for Today',
+  scheduledTooltip:          'Scheduled: Scheduled for a future date',
+  stakeholderTooltip:        'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
+  somedayTooltip:            'Someday / Maybe',
 }
 
 export class ActionTrackerSettingTab extends PluginSettingTab {
@@ -65,22 +69,22 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 		this.containerEl.empty();
 
 		this.containerEl.createEl('h1', {text: 'Selectors'});
-    this.containerEl.createEl('p', {text: 'Selectors are regular expressions that capture specific part of an action. ' +
-                                          'These values control which actions to list in each view, and to filter those lists using the search at the top of the O-GTD pane.'});
+    this.containerEl.createEl('p', {text: 'Selectors are regular expressions that capture specific part of a TODO. ' +
+                                          'These values control which TODOs will appear in each O-GTD view.'});
 
-    this.containerEl.createEl('h3', {text: 'Snipets'});
-    this.containerEl.createEl('p', {text: 'Use these selectors to capture specific information from your action item. ' + 
-                                          'You can filter view results with these using the search box at the top. ' +
-                                          'The "Stakeholder and projects actions" view only shows actions ' + 
-                                          'that have either a Project or an Action Party. '});
+    this.containerEl.createEl('h3', {text:'Contexts'});
+    this.containerEl.createEl('p', {text: 'Capture specific context information from your TODO item. ' + 
+                                          'You can filter view results based on these contexts using the search field at the top.' +
+                                          'The "Context Actions" view only shows actions ' + 
+                                          'with a valid context. '});
     this.containerEl.createEl('p', {text: 'The patterns will only capture the first match. If you mention multiple ' +
-                                          'people and projects in a TODO, you must place the action party first. For example:'});
-    this.containerEl.createEl('p', {text: '[ ] #discussWith [[People/Catherine]] what present to buy for [[People/Kate]] as a recognition ' +
-                                          'for achievements on [[Project/Secret campaign]].'});
+                                          'people, projects and locations in a TODO, you must place the action party first. For example:'});
+    this.containerEl.createEl('p', {text: '- [ ] #discussWith [[People/Catherine]] what present to buy for [[People/Kate]] as a recognition ' +
+                                          'for her achievements on [[Project/Secret campaign]].'});
     this.containerEl.createEl('p', {text: 'Catherine will be identified as the Action Party and "Secret campaign" as the Project.'});
 		new Setting(containerEl)
-			.setName('Action Party') 
-			.setDesc('This is the regular expression to identify the action party in the action. Used for filtering todos by person.')
+			.setName('Person') 
+			.setDesc('This is the regular expression to identify the action party in the TODO.')
 			.addText(text => text
 				.setPlaceholder('\\[{2}People\\/(.*?)\\]{2}')
         .setValue(this.plugin.settings.personRegexpString)
@@ -91,7 +95,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Project')
-      .setDesc('This is the regular expression to identify the project in the action. Used for filtering todos by project name.')
+      .setDesc('This is the regular expression to identify the project in the action.')
       .addText(text => text
         .setPlaceholder('\\[{2}Projects\\/(.*?)\\]{2}')
         .setValue(this.plugin.settings.projectRegexpString)
@@ -100,11 +104,23 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           await this.plugin.saveFilterSettings();
         }));
 
+    new Setting(containerEl)
+      .setName('Location')
+      .setDesc('This is the regular expression to identify the location in the action.')
+      .addText(text => text
+        .setPlaceholder('\\[{2}Projects\\/(.*?)\\]{2}')
+        .setValue(this.plugin.settings.locationRegexpString)
+        .onChange(async (value) => {
+          this.plugin.settings.locationRegexpString = value;
+          await this.plugin.saveFilterSettings();
+        }));
+  
+
       new Setting(containerEl)
       .setName('Miscellaneous')
-      .setDesc('This is the regular expression to capture whatever other part of the action you prefer to capture. ' +
-               'This snipet will only effect filtering when using the search box at the top of the O-GTD panel. The default setting is to capture nothing. ' +
-               'Should you, for example, want to capture the whole action line, change the pattern to: (.*)')
+      .setDesc('This is the regular expression to capture whatever other part of the TODO you prefer to capture. ' +
+               'This is not a context, and will only effect filtering when using the search box at the top of the O-GTD panel. The default setting is to capture nothing. ' +
+               'Should you, for example, want to capture the whole TODO line so you can do full text filtering (and not just filter on contexts), change the pattern to: (.*)')
       .addText(text => text
         .setPlaceholder('(.*)')
         .setValue(this.plugin.settings.miscRegexpString)
@@ -114,14 +130,14 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         }));
   
     this.containerEl.createEl('h3', {text: 'Date'});
-    this.containerEl.createEl('p', {text: 'This is the actions\'s due date. If set, your action will show up in one of the date filtered views: ' + 
-                                          'Aging (date is overdue), Today (date is today), Scheduled (future date).'});
+    this.containerEl.createEl('p', {text: 'This is the TODO\'s due date. If set, your TODO will show up in one of the date filtered views: ' + 
+                                          'Overdue, Today, Scheduled (for a future date).'});
     new Setting(containerEl)
         .setName('Date')
-        .setDesc('This is the regular expression to get the date for an action. You have two options. 1) If your RegExp captures 3 values, then '+
-                 'the first must be the year (yyyy), the sceond the month (mm), the third the day (dd). ' +
+        .setDesc('This is the regular expression to capture the date for your TODO. You have two options: 1) If the RegExp captures 3 values, then '+
+                 'the first value must be the year (yyyy), the sceond the month (mm), and the third the day (dd). ' +
                  '2) If your RegExp captures a single value, then it must be a valid date based on your regional settings. For example: ' +
-                 '#(\\d{4}\\-\\d{2}\\-\\d{2}) is captures the following date yyyy-mm-dd')
+                 '#(\\d{4}\\-\\d{2}\\-\\d{2}) captures the following date yyyy-mm-dd')
         .addText(text => text
           .setPlaceholder('#(\\d{4})\\/(\\d{2})\\/(\\d{2})')
           .setValue(this.plugin.settings.dateRegexpString)
@@ -130,14 +146,13 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
             await this.plugin.saveFilterSettings();
         }));
     
-    this.containerEl.createEl('h3', {text: 'Stakeholder-action tags'});
-    this.containerEl.createEl('p', {text: 'These three tags allow you to qualify the type of stakeholder action you intend to take. ' +
-                                          'In the "Stakeholder and project actions" view items will be pre-sorted ' +
-                                          'with #discussWith first, #waitingFor second, and #promisedTo third. I can imagine situations ' + 
-                                          'when you repurpose these to list actions based on priority: #high, #medium, #low by changing the regular expressions.'});
+    this.containerEl.createEl('h3', {text: 'Action Tags'});
+    this.containerEl.createEl('p', {text: 'These three tags allow you to qualify the type of action you intend to take. ' +
+                                          'Items in the "Context Actions" view are pre-sorted ' +
+                                          'with #ActionTag1 first, #ActionTag2 second, and #ActionTag3 third. '});
     new Setting(containerEl)
-			.setName('Discuss With tag')
-			.setDesc('This is the regular expression to identify topics you want to discuss with someone.')
+			.setName('Action Tag 1')
+			.setDesc('This is the regular expression to capture the action tag. The default is #discussWith, to mark an action to discuss something with someone.')
 			.addText(text => text
 				.setPlaceholder('#(discussWith)')
         .setValue(this.plugin.settings.discussWithRegexpString)
@@ -147,8 +162,8 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 				}));
 
     new Setting(containerEl)
-      .setName('Waiting For')
-      .setDesc('This is the regular expression to identify actions which you are waiting for some to complete.')
+      .setName('Action Tag 2')
+      .setDesc('This is the regular expression to capture the action tag. The default is #waitingFor, to mark an action to follow up with someone on a promise.')
       .addText(text => text
         .setPlaceholder('#(waitingFor)')
         .setValue(this.plugin.settings.waitingForRegexpString)
@@ -158,8 +173,8 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         }));        
     
     new Setting(containerEl)
-      .setName('Promised To')
-      .setDesc('This is the regular expression to identify promises you have made to someone.')
+      .setName('Action Tag 3')
+      .setDesc('This is the regular expression to capture the action tag. The default is set to capture #promisedTo, to mark an action to remind you that you have promised something to someone.')
       .addText(text => text
         .setPlaceholder('#(promisedTo)')
         .setValue(this.plugin.settings.promisedToRegexpString)
@@ -168,10 +183,10 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           await this.plugin.saveFilterSettings();
         }));        
 
-    this.containerEl.createEl('h3', {text: 'Someday/Maybe tag'});
-    this.containerEl.createEl('p', {text: 'Use this tag to mark actions that are deliberately without a deadline, such as ' +
-                                          'items on your bucket list. These actions will show up in the "Someday/Maybe view. ' + 
-                                          'Note, that actions without a valid tag and without a deadline will show up in the Inbox.'});
+    this.containerEl.createEl('h3', {text: 'Someday/Maybe Tag'});
+    this.containerEl.createEl('p', {text: 'Use this tag to mark TODOs that are deliberately without a deadline, a context and/or and action, such as ' +
+                                          'items on your bucket list. These TODOs will show up in the "Someday/Maybe view. ' + 
+                                          'Note, that TODOs without a valid tag and without a deadline will show up in the Inbox.'});
     new Setting(containerEl)
       .setName('Someday Maybe regexp pattern')
       .setDesc('This is the regular expression to identify the Someday/Maybe tag.')
@@ -183,14 +198,11 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           await this.plugin.saveFilterSettings();
         }));  
     
-
-
-
     this.containerEl.createEl('h1', {text: 'Exclusions'});   
-    this.containerEl.createEl('p', {text: 'Settings to define which actions to exclude from the view.'});
+    this.containerEl.createEl('p', {text: 'Settings to define which TODOs to exclude from the view.'});
     new Setting(containerEl)
       .setName('Exclude path')
-      .setDesc('Intended for excluding your Templates folder. The files in this folder and all sub-folders will be excluded by Obsidian-GTD. The value given in this setting '+
+      .setDesc('Intended for excluding your Templates folder. The files in this folder and all sub-folders will be excluded by O-GTD. The value given in this setting '+
                'is matched to the beginning of the filepath using .startsWith(). If you set this value to Temp, then '+
                'all files on the filepath startring with the string given will be excluded. To stick with our example Temp will exclude all of the following folders: ' +
                'Templates/, Template/, Temp/, etc. but will not exclude templates/ or temp/... Exclude folder names are case sensitive.')
@@ -215,6 +227,18 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           this.plugin.settings.excludeFilenameFragment = value;
           await this.plugin.saveFilterSettings();
         }));   
+
+    new Setting(containerEl)
+      .setName('Exclude TODO')
+      .setDesc('Regular expression to capture a tag that marks a TODO that should be excluded by the plugin. Intended for filtering out TODOs based on the content of the TODO. ')
+      .addText(text => text
+        .setPlaceholder('#(exclude)')
+        .setValue(this.plugin.settings.excludeTagRegexpString)
+        .onChange(async (value) => {
+          this.plugin.settings.excludeTagRegexpString = value;
+          await this.plugin.saveFilterSettings();
+        }));   
+
 
 
 
@@ -245,9 +269,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       });  
 
 
-      this.containerEl.createEl('h3', {text: 'Aging'});
+      this.containerEl.createEl('h3', {text: 'Overdue'});
       new Setting(containerEl)
-        .setName('Show/hide Aging')
+        .setName('Show/hide Overdue')
         .addToggle(value => value
           .setValue(this.plugin.settings.isAgingVisible)
           .onChange(async (value) => {
@@ -255,7 +279,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
             await this.plugin.saveViewDisplaySettings();
           }));  
       new Setting(containerEl)
-        .setName('Aging tooltip')
+        .setName('Overdue tooltip')
         .addTextArea(text => {
           let t = text.setPlaceholder(DEFAULT_SETTINGS.agingTooltip)
           .setValue(this.plugin.settings.agingTooltip)
@@ -311,9 +335,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
             });       
             
   
-        this.containerEl.createEl('h3', {text: 'Stakeholder Actions'});
+        this.containerEl.createEl('h3', {text: 'Context Actions'});
           new Setting(containerEl)
-            .setName('Show/hide Stakeholder Actions')
+            .setName('Show/hide Context Actions')
             .addToggle(value => value
               .setValue(this.plugin.settings.isStakeholderVisible)
               .onChange(async (value) => {
@@ -321,7 +345,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
                 await this.plugin.saveViewDisplaySettings();
               }));  
           new Setting(containerEl)
-            .setName('Stakeholder Actions tooltip')
+            .setName('Context Actions tooltip')
             .addTextArea(text => {
               let t = text.setPlaceholder(DEFAULT_SETTINGS.stakeholderTooltip)
               .setValue(this.plugin.settings.stakeholderTooltip)
