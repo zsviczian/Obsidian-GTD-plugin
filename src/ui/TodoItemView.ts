@@ -203,7 +203,7 @@ export class TodoItemView extends ItemView {
 
     container.createEl('input', {value: this.filter}, (el) => {
       el.addClass('todo-filter-input');
-      el.setAttribute('placeholder','proj/person RexExp filter, case insensitive');
+      el.setAttribute('placeholder','context filter, RegExp case insensitive');
       el.onkeyup = (e) => {
         this.setFilter((<HTMLInputElement>e.target).value);
       };
