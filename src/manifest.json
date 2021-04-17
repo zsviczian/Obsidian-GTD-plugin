@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-gtd-plugin",
+	"name": "Obsidian GTD",
+	"version": "0.0.1",
+	"minAppVersion": "0.10.13",
+	"description": "Filter your actions based on projects, stakeholders, and date. Collect all outstanding actions from your vault and present them in list.",
+	"author": "Zsolt Viczian",
+	"authorUrl": "https://zsolt.blog",
+	"isDesktopOnly": false
+}

@@ -5,24 +5,6 @@ input.todo-filter-input {
     width: 100%;
 }
 
-table.todo-filter-wrapper {
-    width: 100%;   
-}
-
-tr.todo-filter-row {
-  
-}
-
-td.todo-filter-col-input {
-    margin:0;
-    width: 100%;   
-}
-
-td.todo-filter-col-button {
-    width: 1px;   
-}
-
-
 button.todo-filter-button {
     white-space: nowrap;
     margin: 0;
@@ -31,6 +13,12 @@ button.todo-filter-button {
 
 hr.todo-item-view-divider {
     margin:0;
+}
+
+div.todo-item-view-search {
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
 
 div.todo-item-view-toolbar {
@@ -46,6 +34,11 @@ div.todo-item-view-toolbar-item {
     padding-right: 15px;
     padding-top: 8px;
     padding-bottom: 2px;
+    cursor: pointer;
+}
+
+div.todo-item-view-sort {
+    padding-left: 8px;
     cursor: pointer;
 }
 
@@ -82,10 +75,18 @@ div.todo-item-view-item-link {
     padding-left: 8px;
 }
 
-div.todo-item-view-item-link svg, div.todo-item-view-toolbar-item svg {
+div.todo-item-view-item-link svg, div.todo-item-view-toolbar-item, div.todo-item-view-sort svg {
     fill: #cccccc;
 }
 
 div.todo-item-view-toolbar-item.active svg {
-    fill: #7f6df2;
+    fill: var(--interactive-accent);
+}
+
+div.todo-item-view-sort.none svg {
+    stroke: var(--text-normal);
+}
+
+div.todo-item-view-sort.active svg {
+    stroke: var(--interactive-accent);
 }

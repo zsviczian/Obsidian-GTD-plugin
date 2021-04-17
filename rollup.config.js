@@ -1,9 +1,10 @@
-//npm run build -- --environment BUILD:production
+//npm run build
 //npm run dev
 
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import fs from 'fs';
 
 const isProd = (process.env.BUILD === 'production');
 const banner = 
@@ -15,15 +16,37 @@ https://github.com/zsviczian/obsidian-stakeholder-actions
 `;
 
 export default {
-  input: 'main.ts',
+  input: './src/main.ts',
   output: {
     dir: isProd ? './dist' : '.',
     sourcemap: 'inline',
-    sourcemapExcludeSources: isProd,
+//    sourcemapExcludeSources: isProd,
     format: 'cjs',
     exports: 'default',
-    banner
+    banner,
   },
   external: ['obsidian'],
-  plugins: [typescript(), nodeResolve({ browser: true }), commonjs()],
+  plugins: [copyAndWatch('src/styles.css','styles.css',true),
+            copyAndWatch('src/manifest.json','manifest.json',true),
+            nodeResolve({ browser: true }), 
+            typescript({inlineSources: !isProd}), 
+            commonjs()],
 };
+
+function copyAndWatch(fileIn, fileOut, isProd) {
+  if (isProd) 
+    return {
+        name: 'copy-and-watch',
+        async buildStart() {
+            this.addWatchFile(fileIn);
+        },
+        async generateBundle() {
+            this.emitFile({
+                type: 'asset',
+                fileName: fileOut,
+                source: fs.readFileSync(fileIn)
+            });
+        }
+    }
+  else return null;
+}

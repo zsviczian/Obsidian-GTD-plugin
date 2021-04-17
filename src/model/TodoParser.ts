@@ -22,7 +22,11 @@ export class TodoParser {
     const dateMatches = description.match(this.props.dateRegexp);
     let actionDate = undefined;
     if (dateMatches != null) {
-      actionDate = dateMatches.length > 3 ? new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0) : undefined;
+      if(dateMatches.length == 4) {
+        actionDate = new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0);
+      } else if (dateMatches.length == 2) {
+        actionDate = new Date(dateMatches[1]);
+      } 
     }  
     const personMatches = description.match(this.props.personRegexp);
     const person = personMatches != null ? personMatches[1] : "";
@@ -30,15 +34,26 @@ export class TodoParser {
     const projectMatches = description.match(this.props.projectRegexp);
     const project = projectMatches != null ? projectMatches[1] : "";
 
+    const locationMatches = description.match(this.props.locationRegexp);
+    const location = locationMatches != null ? locationMatches[1] : "";
+
+    const miscMatches = description.match(this.props.miscRegexp);
+    const misc = miscMatches != null ? miscMatches.length == 2 ? miscMatches[1] : "" : "";
+
+    const excludeMatches = description.match(this.props.excludeTagRegexp);
+    const exclude = excludeMatches != null ? excludeMatches.length == 2 ? true : false : false;
+
     return new TodoItem(
-      status,
+      exclude ? TodoItemStatus.Done : status, //items that include the excludeTag are treated as completed TODOs
       description,
-      person,
-      project,
+      person.toLowerCase(),
+      project.toLowerCase(),
+      location.toLowerCase(),
+      misc.toLowerCase(),
       description.match(this.props.somedayMaybeRegexp) != null,
-      description.match(this.props.discussWithRegexp) != null,
-      description.match(this.props.waitingForRegexp) != null,
-      description.match(this.props.promisedToRegexp) != null,
+      description.match(this.props.actionTagOneRegexp) != null,
+      description.match(this.props.actionTagTwoRegexp) != null,
+      description.match(this.props.actionTagThreeRegexp) != null,
       filePath,
       (entry.index ?? 0) + todoItemOffset,
       entry[0].length - todoItemOffset,

@@ -3,13 +3,18 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoParser } from '../model/TodoParser';
 
 export interface TodoItemIndexProps {
-  personRegexp:       RegExp;
-  projectRegexp:      RegExp;
-  dateRegexp:         RegExp;
-  discussWithRegexp:  RegExp;
-  waitingForRegexp:   RegExp;
-  promisedToRegexp:   RegExp;
-  somedayMaybeRegexp: RegExp;
+  personRegexp:            RegExp;
+  projectRegexp:           RegExp;
+  locationRegexp:          RegExp;
+  miscRegexp:              RegExp;
+  dateRegexp:              RegExp;
+  actionTagOneRegexp:      RegExp;
+  actionTagTwoRegexp:      RegExp;
+  actionTagThreeRegexp:    RegExp;
+  somedayMaybeRegexp:      RegExp;
+  excludeTagRegexp:        RegExp;
+  excludePath:             string;
+  excludeFilenameFragment: string;
 }
 
 export class TodoIndex {
@@ -25,6 +30,11 @@ export class TodoIndex {
     this.listeners = [listener];
   }
 
+  async reloadIndex(props: TodoItemIndexProps) {
+    this.props = props;
+    await this.initialize();
+  }
+  
   async initialize(): Promise<void> {
     // TODO: persist index & last sync timestamp; only parse files that changed since then.
     const todoMap = new Map<string, TodoItem[]>();
@@ -33,10 +43,13 @@ export class TodoIndex {
 
     const markdownFiles = this.vault.getMarkdownFiles();
     for (const file of markdownFiles) {
-      const todos = await this.parseTodosInFile(file);
-      numberOfTodos += todos.length;
-      if (todos.length > 0) {
-        todoMap.set(file.path, todos);
+      if(!(this.props.excludePath!='' && file.path.startsWith(this.props.excludePath)) &&
+         !(this.props.excludeFilenameFragment!='' && file.path.toLowerCase().includes(this.props.excludeFilenameFragment))) {
+        const todos = await this.parseTodosInFile(file);
+        numberOfTodos += todos.length;
+        if (todos.length > 0) {
+          todoMap.set(file.path, todos);
+        }
       }
     }
 
