@@ -4,6 +4,7 @@ OTD - The extension for GTD practitioners.
 Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/obsidian-plugin-todo)
 
 ### Features
+- Everything customizable. Date formats, tags, view visibility
 - Aggregates all outstanding TODOs in your vault and lists them in a single view
 - Split out TODOs by type ("Inbox", "Overdue", "Today", "Scheduled", "Context Actions, and "Someday/Maybe")
 - Schedule a TODO for a specific date by adding a tag #YYYY/DD/MM
@@ -12,14 +13,13 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 - Complete TODOs from the list view
 - Quickly jump to the file in which a TODO is found from the list view
 - Filter TODOs based on Context. Default setting assumes [[Pepole/Name]], [[Projects/Name]], [[Locations/Name]] naming convention for projects, people and locations.
-- Lots and lots of settings. Everything customizable.
+- Exclusions based on folder (e.g. Templated folder), based on filename (e.g. Holiday checklist.md; Publish Checklist.md; etc), based on TODO content (e.g. #exclude tag)
 
 ### Views
-- Unclassified TODOs show up in the Inbox. A TODO is unclassified if it does not meet any of these criteria: has a date, or has a Context and an Action, or has a Someday tag.
-- TODOs with date show up in Overdue, Today, and Scheduled as meaningful
+- Unclassified TODOs show up in the Inbox. A TODO is unclassified if it does not meet any of these criteria: has a date, or has both a Context and an Action, or has a Someday/Maybe tag.
+- TODOs with a date show up in Overdue, Today, and Scheduled as meaningful
 - TODOs that have both a Context and an Action show up in Context Actions
 - TODOs with the Someday tag show up in the Someday/maybe view
-
 
 ### Screenshots
 ![image](https://user-images.githubusercontent.com/14358394/115065312-457a9a80-9eee-11eb-8546-2cbcb5057754.png)
@@ -29,6 +29,10 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 ![image](https://user-images.githubusercontent.com/14358394/115065382-5aefc480-9eee-11eb-91f6-430096e4a05a.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065636-aa35f500-9eee-11eb-9e77-6d630fa0cd1b.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065473-78bd2980-9eee-11eb-9533-9cd0d04a44e2.png)
-![image](https://user-images.githubusercontent.com/14358394/115066536-f6356980-9eef-11eb-89bc-de407ede0a4e.png)
+![image](https://user-images.githubusercontent.com/14358394/115108993-a8624500-9f73-11eb-8a49-c974c6083c68.png)
+![image](https://user-images.githubusercontent.com/14358394/115109001-b0ba8000-9f73-11eb-894e-e2a07457170c.png)
+![image](https://user-images.githubusercontent.com/14358394/115109006-b87a2480-9f73-11eb-8a41-a601f7e93c86.png)
+![image](https://user-images.githubusercontent.com/14358394/115109014-c29c2300-9f73-11eb-953f-6121a0d6d891.png)
+
 
 
