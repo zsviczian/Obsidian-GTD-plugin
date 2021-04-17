@@ -50,18 +50,18 @@ export default class ActionTrackerPlugin extends Plugin {
         toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => {
           this.todoIndex.setStatus(todo, newStatus);
         },
-        isInboxVisible:       this.getSettingValue('isInboxVisible'),
-        isOverdueVisible:     this.getSettingValue('isOverdueVisible'),
-        isTodayVisible:       this.getSettingValue('isTodayVisible'),
-        isScheduledVisible:   this.getSettingValue('isScheduledVisible'),
+        isInboxVisible:         this.getSettingValue('isInboxVisible'),
+        isOverdueVisible:       this.getSettingValue('isOverdueVisible'),
+        isTodayVisible:         this.getSettingValue('isTodayVisible'),
+        isScheduledVisible:     this.getSettingValue('isScheduledVisible'),
         isContextActionVisible: this.getSettingValue('isContextActionVisible'),
-        isSomedayVisible:     this.getSettingValue('isSomedayVisible'),
-        inboxTooltip:         this.getSettingValue('inboxTooltip'),
-        overdueTooltip:       this.getSettingValue('overdueTooltip'),
-        todayTooltip:         this.getSettingValue('todayTooltip'),
-        scheduledTooltip:     this.getSettingValue('scheduledTooltip'),
+        isSomedayVisible:       this.getSettingValue('isSomedayVisible'),
+        inboxTooltip:           this.getSettingValue('inboxTooltip'),
+        overdueTooltip:         this.getSettingValue('overdueTooltip'),
+        todayTooltip:           this.getSettingValue('todayTooltip'),
+        scheduledTooltip:       this.getSettingValue('scheduledTooltip'),
         contextActionTooltip:   this.getSettingValue('contextActionTooltip'),
-        somedayTooltip:       this.getSettingValue('somedayTooltip'),
+        somedayTooltip:         this.getSettingValue('somedayTooltip'),
       };
       this.view = new TodoItemView(leaf, props);
       return this.view;

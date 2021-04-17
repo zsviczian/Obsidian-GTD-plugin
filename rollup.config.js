@@ -28,8 +28,8 @@ export default {
   external: ['obsidian'],
   plugins: [copyAndWatch('src/styles.css','styles.css',true),
             copyAndWatch('src/manifest.json','manifest.json',true),
-            typescript({inlineSources: !isProd}), 
             nodeResolve({ browser: true }), 
+            typescript({inlineSources: !isProd}), 
             commonjs()],
 };
 

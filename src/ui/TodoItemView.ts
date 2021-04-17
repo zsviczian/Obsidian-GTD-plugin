@@ -1,4 +1,4 @@
-import { ItemView, MarkdownRenderer, WorkspaceLeaf } from 'obsidian';
+import { ItemView, MarkdownRenderer, WorkspaceLeaf, Point, App, Menu } from 'obsidian';
 import { VIEW_TYPE_TODO } from '../constants';
 import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { RenderIcon, Icon } from '../ui/icons';
@@ -12,14 +12,16 @@ export enum TodoItemViewPane {
   ContextAction,
 }
 
-enum TodoSortStates {
+export enum TodoSortStates {
   None,
   DateAsc,
   DateDesc,
-  ContextActionAsc,
-  ContextActionDesc,
+  PersonAsc,
+  PersonDesc,
   ProjectAsc,
   ProjectDesc,
+  LocationAsc,
+  LocationDesc,
   MiscAsc,
   MiscDesc,  
   FullTextAsc,
@@ -48,7 +50,7 @@ interface TodoItemViewState {
   activePane: TodoItemViewPane;
 }
 
-interface TodoSortState {
+export interface TodoSortState {
   state: TodoSortStates,
 }
 
@@ -115,15 +117,19 @@ export class TodoItemView extends ItemView {
     if(newState.activePane == TodoItemViewPane.Overdue || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
       this.sortState = {state: TodoSortStates.DateAsc};
     else if (newState.activePane == TodoItemViewPane.ContextAction)
-      this.sortState = {state: TodoSortStates.ContextActionAsc};
+      this.sortState = {state: TodoSortStates.PersonAsc};
     else 
       this.sortState = {state: TodoSortStates.FullTextAsc};
     this.render();
   }
 
-  private setSortState(newState: TodoSortState) {
+  public setSortState(newState: TodoSortState) {
     this.sortState = newState;
     this.render();
+  }
+
+  public getSortState() {
+    return this.sortState;
   }
 
   private setFilter(filter: string) {
@@ -172,14 +178,18 @@ export class TodoItemView extends ItemView {
           return 'Sort by: Action Date Descending';
         case TodoSortStates.DateAsc:
           return 'Sort by: Action Date Ascending';
-        case TodoSortStates.ContextActionDesc:
+        case TodoSortStates.PersonDesc:
           return 'Sort by: Person Descending';
-        case TodoSortStates.ContextActionAsc:
+        case TodoSortStates.PersonAsc:
           return 'Sort by: Person Ascending';
         case TodoSortStates.ProjectDesc:
           return 'Sort by: Project Descending';
         case TodoSortStates.ProjectAsc:
           return 'Sort by: Project Ascending';
+        case TodoSortStates.LocationDesc:
+          return 'Sort by: Location Descending';
+        case TodoSortStates.LocationAsc:
+          return 'Sort by: Location Ascending';
         case TodoSortStates.MiscDesc:
           return 'Sort by: Misc-snippet Descending';
         case TodoSortStates.MiscAsc:
@@ -202,8 +212,9 @@ export class TodoItemView extends ItemView {
     container.createDiv(`todo-item-view-sort${activeClass()}`, (el) => {
       el.appendChild(RenderIcon(Icon.Sort, sortLabel(this.sortState.state)));
       el.onClickEvent((e) => {
-        const nextSortState = (this.sortState.state + 1) % this.sortStateCount;
-        this.setSortState({state: nextSortState});
+        const menu = new SortContextMenu(this.app, this, {x: e.clientX, y: e.clientY});
+//        const nextSortState = (this.sortState.state + 1) % this.sortStateCount;
+//        this.setSortState({state: nextSortState});
       });
     });
   }
@@ -309,14 +320,18 @@ export class TodoItemView extends ItemView {
         sortResult = a.actionDate < b.actionDate ? -1 : a.actionDate > b.actionDate ? 1 : 0;break;
       case TodoSortStates.DateDesc:
         sortResult = a.actionDate > b.actionDate ? -1 : a.actionDate < b.actionDate ? 1 : 0;break;
-      case TodoSortStates.ContextActionAsc:
+      case TodoSortStates.PersonAsc:
         sortResult = a.person < b.person ? -1 : a.person > b.person ? 1 : 0;break;
-      case TodoSortStates.ContextActionDesc:
+      case TodoSortStates.PersonDesc:
         sortResult = a.person > b.person ? -1 : a.person < b.person ? 1 : 0;break;
       case TodoSortStates.ProjectAsc:
         sortResult = a.project < b.project ? -1 : a.project > b.project ? 1 : 0;break;
       case TodoSortStates.ProjectDesc:
         sortResult = a.project > b.project ? -1 : a.project < b.project ? 1 : 0;break;
+      case TodoSortStates.LocationAsc:
+        sortResult = a.location < b.location ? -1 : a.location > b.location ? 1 : 0;break;
+      case TodoSortStates.LocationDesc:
+        sortResult = a.location > b.location ? -1 : a.location < b.location ? 1 : 0;break;
       case TodoSortStates.MiscAsc:
         sortResult = a.misc < b.misc ? -1 : a.misc > b.misc ? 1 : 0;break;
       case TodoSortStates.MiscDesc:
@@ -402,5 +417,112 @@ export class TodoItemView extends ItemView {
 
   private openFile(todo: TodoItem): void {
     this.props.openFile(todo.sourceFilePath);
+  }
+}
+
+class SortContextMenu extends Menu {
+  private view: TodoItemView;
+
+  constructor(app: App, view: TodoItemView, position: Point) {
+    super(app);
+    const sortState = view.getSortState().state;
+    this.view = view;
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.None ? 'checkmark' : '')
+      .setTitle("don't sort")
+      .onClick(async () => this.menuClick(TodoSortStates.None))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.DateDesc ? 'checkmark' : '')
+        .setTitle("by date (new to old)")
+        .onClick(async () => this.menuClick(TodoSortStates.DateDesc))
+    )
+    
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.DateAsc ? 'checkmark' : '')
+      .setTitle("by date (old to new)")
+      .onClick(async () => this.menuClick(TodoSortStates.DateAsc))
+    ) 
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.PersonAsc ? 'checkmark' : '')
+      .setTitle("by Person (A to Z)")
+      .onClick(async () => this.menuClick(TodoSortStates.PersonAsc))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.PersonDesc ? 'checkmark' : '')
+        .setTitle("by Person (Z to A)")
+        .onClick(async () => this.menuClick(TodoSortStates.PersonDesc))
+    )
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.ProjectAsc ? 'checkmark' : '')
+      .setTitle("by Project (A to Z)")
+      .onClick(async () => this.menuClick(TodoSortStates.ProjectAsc))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.ProjectDesc ? 'checkmark' : '')
+        .setTitle("by Project (Z to A)")
+        .onClick(async () => this.menuClick(TodoSortStates.ProjectDesc))
+    )
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.LocationAsc ? 'checkmark' : '')
+      .setTitle("by Location (A to Z)")
+      .onClick(async () => this.menuClick(TodoSortStates.LocationAsc))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.LocationDesc ? 'checkmark' : '')
+        .setTitle("by Location (Z to A)")
+        .onClick(async () => this.menuClick(TodoSortStates.LocationDesc))
+    )
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.MiscAsc ? 'checkmark' : '')
+      .setTitle("by Misc Context (A to Z)")
+      .onClick(async () => this.menuClick(TodoSortStates.MiscAsc))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.MiscDesc ? 'checkmark' : '')
+        .setTitle("by Misc Context (Z to A)")
+        .onClick(async () => this.menuClick(TodoSortStates.MiscDesc))
+    )
+
+    this.addItem((menuItem) =>
+    menuItem
+      .setIcon(sortState == TodoSortStates.FullTextAsc ? 'checkmark' : '')
+      .setTitle("by TODO fulltext (A to Z)")
+      .onClick(async () => this.menuClick(TodoSortStates.FullTextAsc))
+    )
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.FullTextDesc ? 'checkmark' : '')
+        .setTitle("by TODO fulltext (Z to A)")
+        .onClick(async () => this.menuClick(TodoSortStates.FullTextDesc))
+    )
+    
+    this.showAtPosition(position);
+  }
+
+  private menuClick(sortState: TodoSortStates) {
+    this.view.setSortState({state: sortState});
   }
 }
