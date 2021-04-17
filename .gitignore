@@ -13,3 +13,5 @@ yarn-error.log
 # build
 dist/*
 main.js
+styles.css
+manifest.json
