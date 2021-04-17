@@ -4,6 +4,7 @@ OTD - The extension for GTD practitioners.
 Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/obsidian-plugin-todo)
 
 ### Features
+- Everything customizable. Date formats, tags, view visibility
 - Aggregates all outstanding TODOs in your vault and lists them in a single view
 - Split out TODOs by type ("Inbox", "Overdue", "Today", "Scheduled", "Context Actions, and "Someday/Maybe")
 - Schedule a TODO for a specific date by adding a tag #YYYY/DD/MM
@@ -12,14 +13,12 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 - Complete TODOs from the list view
 - Quickly jump to the file in which a TODO is found from the list view
 - Filter TODOs based on Context. Default setting assumes [[Pepole/Name]], [[Projects/Name]], [[Locations/Name]] naming convention for projects, people and locations.
-- Lots and lots of settings. Everything customizable.
 
 ### Views
-- Unclassified TODOs show up in the Inbox. A TODO is unclassified if it does not meet any of these criteria: has a date, or has a Context and an Action, or has a Someday tag.
-- TODOs with date show up in Overdue, Today, and Scheduled as meaningful
+- Unclassified TODOs show up in the Inbox. A TODO is unclassified if it does not meet any of these criteria: has a date, or has both a Context and an Action, or has a Someday/Maybe tag.
+- TODOs with a date show up in Overdue, Today, and Scheduled as meaningful
 - TODOs that have both a Context and an Action show up in Context Actions
 - TODOs with the Someday tag show up in the Someday/maybe view
-
 
 ### Screenshots
 ![image](https://user-images.githubusercontent.com/14358394/115065312-457a9a80-9eee-11eb-8546-2cbcb5057754.png)
