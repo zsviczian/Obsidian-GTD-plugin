@@ -29,10 +29,10 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 ![image](https://user-images.githubusercontent.com/14358394/115065382-5aefc480-9eee-11eb-91f6-430096e4a05a.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065636-aa35f500-9eee-11eb-9e77-6d630fa0cd1b.png)
 ![image](https://user-images.githubusercontent.com/14358394/115065473-78bd2980-9eee-11eb-9533-9cd0d04a44e2.png)
-![image](https://user-images.githubusercontent.com/14358394/115108897-270ab280-9f73-11eb-82a5-98c8278856b9.png)
-![image](https://user-images.githubusercontent.com/14358394/115108903-2d992a00-9f73-11eb-903e-8529607808a5.png)
-![image](https://user-images.githubusercontent.com/14358394/115108910-3558ce80-9f73-11eb-9ff5-a67d48851264.png)
-![image](https://user-images.githubusercontent.com/14358394/115108917-3e49a000-9f73-11eb-8de1-946963f5c5b5.png)
+![image](https://user-images.githubusercontent.com/14358394/115108993-a8624500-9f73-11eb-8a49-c974c6083c68.png)
+![image](https://user-images.githubusercontent.com/14358394/115109001-b0ba8000-9f73-11eb-894e-e2a07457170c.png)
+![image](https://user-images.githubusercontent.com/14358394/115109006-b87a2480-9f73-11eb-8a41-a601f7e93c86.png)
+![image](https://user-images.githubusercontent.com/14358394/115109014-c29c2300-9f73-11eb-953f-6121a0d6d891.png)
 
 
 
