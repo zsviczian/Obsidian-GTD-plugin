@@ -3,17 +3,17 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoParser } from '../model/TodoParser';
 
 export interface TodoItemIndexProps {
-  personRegexp:       RegExp;
-  projectRegexp:      RegExp;
-  locationRegexp:     RegExp;
-  miscRegexp:         RegExp;
-  dateRegexp:         RegExp;
-  actionTagOneRegexp:  RegExp;
-  actionTagTwoRegexp:   RegExp;
-  actionTagThreeRegexp:   RegExp;
-  somedayMaybeRegexp: RegExp;
-  excludeTagRegexp:   RegExp;
-  excludePath:        string;
+  personRegexp:            RegExp;
+  projectRegexp:           RegExp;
+  locationRegexp:          RegExp;
+  miscRegexp:              RegExp;
+  dateRegexp:              RegExp;
+  actionTagOneRegexp:      RegExp;
+  actionTagTwoRegexp:      RegExp;
+  actionTagThreeRegexp:    RegExp;
+  somedayMaybeRegexp:      RegExp;
+  excludeTagRegexp:        RegExp;
+  excludePath:             string;
   excludeFilenameFragment: string;
 }
 

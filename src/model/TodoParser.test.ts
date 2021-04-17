@@ -3,18 +3,18 @@ import { TodoParser } from './TodoParser';
 import { TodoItemIndexProps} from '../model/TodoIndex'
 
 const props = {
-  personRegexp:        new RegExp('\\[{2}(People\\/*.)\\]{2}'),
-  projectRegexp:       new RegExp('\\[{2}(Projects\\/*.)\\]{2}'),
-  locationRegexp:      new RegExp('\\[{2}(Locations\\/*.)\\]{2}'),
-  miscRegexp:          new RegExp('(.*)'),
-  dateRegexp:          new RegExp('#(\\d{4}\\/\\d{2}\\/\\d{2})'),
-  actionTagOneRegexp:   new RegExp('#(discussWith)'),
-  actionTagTwoRegexp:    new RegExp('#(waitingFor)'),
+  personRegexp:            new RegExp('\\[{2}(People\\/*.)\\]{2}'),
+  projectRegexp:           new RegExp('\\[{2}(Projects\\/*.)\\]{2}'),
+  locationRegexp:          new RegExp('\\[{2}(Locations\\/*.)\\]{2}'),
+  miscRegexp:              new RegExp('(.*)'),
+  dateRegexp:              new RegExp('#(\\d{4}\\/\\d{2}\\/\\d{2})'),
+  actionTagOneRegexp:      new RegExp('#(discussWith)'),
+  actionTagTwoRegexp:      new RegExp('#(waitingFor)'),
   actionTagThreeRegexp:    new RegExp('#(promisedTo)'),
-  somedayMaybeRegexp:  new RegExp('#(someday)'),
-  excludePath:         '',
+  somedayMaybeRegexp:      new RegExp('#(someday)'),
+  excludePath:             '',
   excludeFilenameFragment: '',
-  excludeTagRegexp:    new RegExp(''),
+  excludeTagRegexp:        new RegExp(''),
 }
 const todoParser = new TodoParser(props);
 

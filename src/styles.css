@@ -79,7 +79,8 @@ div.todo-item-view-item-link svg, div.todo-item-view-toolbar-item, div.todo-item
     fill: #cccccc;
 }
 
-div.todo-item-view-toolbar-item.active svg {
+div.todo-item-view-toolbar-item.active svg,
+div.todo-item-view-sort.active svg {
     fill: var(--interactive-accent);
 }
 
@@ -87,6 +88,3 @@ div.todo-item-view-sort.none svg {
     stroke: var(--text-normal);
 }
 
-div.todo-item-view-sort.active svg {
-    stroke: var(--interactive-accent);
-}

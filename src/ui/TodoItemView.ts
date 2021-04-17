@@ -13,31 +13,31 @@ export enum TodoItemViewPane {
 }
 
 enum TodoSortStates {
-  None = 0,
-  DateAsc = 1,
-  DateDesc = 2,
-  StakeholderAsc = 3,
-  StakeholderDesc = 4,
-  ProjectAsc = 5,
-  ProjectDesc = 6,
-  MiscAsc = 7,
-  MiscDesc = 8,  
-  FullTextAsc = 9,
-  FullTextDesc = 10,
+  None,
+  DateAsc,
+  DateDesc,
+  StakeholderAsc,
+  StakeholderDesc,
+  ProjectAsc,
+  ProjectDesc,
+  MiscAsc,
+  MiscDesc,  
+  FullTextAsc,
+  FullTextDesc,
 }
 
 export interface TodoItemViewProps {
-  todos: TodoItem[];
-  openFile: (filePath: string) => void;
-  toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => void;
+  todos:                TodoItem[];
+  openFile:             (filePath: string) => void;
+  toggleTodo:           (todo: TodoItem, newStatus: TodoItemStatus) => void;
   isInboxVisible:       boolean;
-  isOverdueVisible:       boolean;
+  isOverdueVisible:     boolean;
   isTodayVisible:       boolean;
   isScheduledVisible:   boolean;
   isStakeholderVisible: boolean;
   isSomedayVisible:     boolean;
   inboxTooltip:         string;
-  overdueTooltip:         string;
+  overdueTooltip:       string;
   todayTooltip:         string;
   scheduledTooltip:     string;
   stakeholderTooltip:   string;
@@ -205,7 +205,6 @@ export class TodoItemView extends ItemView {
       el.onClickEvent((e) => {
         const nextSortState = (this.sortState.state + 1) % this.sortStateCount;
         this.setSortState({state: nextSortState});
-        //(<HTMLElement>e.target).setAttribute('aria-label',sortLabel(nextSortState));
       });
     });
   }
