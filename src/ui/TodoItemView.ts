@@ -4,7 +4,7 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { RenderIcon, Icon } from '../ui/icons';
 
 export enum TodoItemViewPane {
-  Aging,
+  Overdue,
   Today,
   Scheduled,
   Inbox,
@@ -31,13 +31,13 @@ export interface TodoItemViewProps {
   openFile: (filePath: string) => void;
   toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => void;
   isInboxVisible:       boolean;
-  isAgingVisible:       boolean;
+  isOverdueVisible:       boolean;
   isTodayVisible:       boolean;
   isScheduledVisible:   boolean;
   isStakeholderVisible: boolean;
   isSomedayVisible:     boolean;
   inboxTooltip:         string;
-  agingTooltip:         string;
+  overdueTooltip:         string;
   todayTooltip:         string;
   scheduledTooltip:     string;
   stakeholderTooltip:   string;
@@ -92,13 +92,13 @@ export class TodoItemView extends ItemView {
 
   public setDisplayProps(props: TodoItemViewProps) {
     this.props.isInboxVisible = props.isInboxVisible;
-    this.props.isAgingVisible = props.isAgingVisible;
+    this.props.isOverdueVisible = props.isOverdueVisible;
     this.props.isTodayVisible = props.isTodayVisible;
     this.props.isScheduledVisible = props.isScheduledVisible;
     this.props.isStakeholderVisible = props.isStakeholderVisible;
     this.props.isSomedayVisible = props.isSomedayVisible;
     this.props.inboxTooltip = props.inboxTooltip;
-    this.props.agingTooltip = props.agingTooltip;
+    this.props.overdueTooltip = props.overdueTooltip;
     this.props.todayTooltip = props.todayTooltip;
     this.props.scheduledTooltip = props.scheduledTooltip;
     this.props.stakeholderTooltip = props.stakeholderTooltip;
@@ -113,7 +113,7 @@ export class TodoItemView extends ItemView {
 
   public setViewState(newState: TodoItemViewState) {
     this.state = newState;
-    if(newState.activePane == TodoItemViewPane.Aging || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
+    if(newState.activePane == TodoItemViewPane.Overdue || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
       this.sortState = {state: TodoSortStates.DateAsc};
     else if (newState.activePane == TodoItemViewPane.Stakeholder)
       this.sortState = {state: TodoSortStates.StakeholderAsc};
@@ -229,10 +229,10 @@ export class TodoItemView extends ItemView {
         el.onClickEvent(() => setActivePane(TodoItemViewPane.Inbox));
       });
 
-    if (this.props.isAgingVisible)
-      container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Aging)}`, (el) => {
-        el.appendChild(RenderIcon(Icon.Aging, this.props.agingTooltip));
-        el.onClickEvent(() => setActivePane(TodoItemViewPane.Aging));
+    if (this.props.isOverdueVisible)
+      container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Overdue)}`, (el) => {
+        el.appendChild(RenderIcon(Icon.Overdue, this.props.overdueTooltip));
+        el.onClickEvent(() => setActivePane(TodoItemViewPane.Overdue));
       });
 
     if (this.props.isTodayVisible)
@@ -377,21 +377,21 @@ export class TodoItemView extends ItemView {
         return date < today;
       };
 
-      const isAgingNote = value.actionDate && isBeforeToday(value.actionDate);
+      const isOverdueNote = value.actionDate && isBeforeToday(value.actionDate);
       const isTodayNote = value.actionDate && isToday(value.actionDate);
-      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote && !isAgingNote;
+      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote && !isOverdueNote;
 
       switch (this.state.activePane) {
         case TodoItemViewPane.Inbox:
-          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isAgingNote && !(isPeopleActionNote && hasContext) ;
+          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isOverdueNote && !(isPeopleActionNote && hasContext) ;
         case TodoItemViewPane.Scheduled:
           return isScheduledNote;
         case TodoItemViewPane.Someday:
           return value.isSomedayMaybeNote;
         case TodoItemViewPane.Today:
           return isTodayNote;
-        case TodoItemViewPane.Aging:
-            return isAgingNote;
+        case TodoItemViewPane.Overdue:
+            return isOverdueNote;
         case TodoItemViewPane.Stakeholder:
           return hasContext && isPeopleActionNote ;
       }

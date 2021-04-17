@@ -7,21 +7,21 @@ export interface ActionTrackerSettings {
   locationRegexpString:      string,
   miscRegexpString:          string,
   dateRegexpString:          string,
-  discussWithRegexpString:   string,
-  waitingForRegexpString:    string,
-  promisedToRegexpString:    string,
+  actionTagOneRegexpString:   string,
+  actionTagTwoRegexpString:    string,
+  actionTagThreeRegexpString:    string,
   somedayMaybeRegexpString:  string,
   excludePath:               string,
   excludeFilenameFragment:   string,
   excludeTagRegexpString:    string,
   isInboxVisible:            boolean,
-  isAgingVisible:            boolean,
+  isOverdueVisible:            boolean,
   isTodayVisible:            boolean,
   isScheduledVisible:        boolean,
   isStakeholderVisible:      boolean,
   isSomedayVisible:          boolean,
   inboxTooltip:              string,
-  agingTooltip:              string,
+  overdueTooltip:              string,
   todayTooltip:              string,
   scheduledTooltip:          string,
   stakeholderTooltip:        string,
@@ -34,21 +34,21 @@ export const DEFAULT_SETTINGS: ActionTrackerSettings = {
   locationRegexpString:      '\\[{2}Locations\\/(.*?)\\]{2}',
   miscRegexpString:          '',
   dateRegexpString:          '#(\\d{4})\\/(\\d{2})\\/(\\d{2})',
-  discussWithRegexpString:   '#(discussWith)',
-  waitingForRegexpString:    '#(waitingFor)',
-  promisedToRegexpString:    '#(promisedTo)',
+  actionTagOneRegexpString:   '#(discussWith)',
+  actionTagTwoRegexpString:    '#(waitingFor)',
+  actionTagThreeRegexpString:    '#(promisedTo)',
   somedayMaybeRegexpString:  '#(someday)',
   excludeTagRegexpString:    '',
   excludePath:               '',
   excludeFilenameFragment:   '',
   isInboxVisible:            true,
-  isAgingVisible:            true,
+  isOverdueVisible:            true,
   isTodayVisible:            true,
   isScheduledVisible:        true,
   isStakeholderVisible:      true,
   isSomedayVisible:          true,
   inboxTooltip:              'Inbox: Unclassified TODOs, i.e. without a date; without an Action Tag and a Context; without someday/maybe tag.',
-  agingTooltip:              'Overdue: Past the TODO\'s date.',
+  overdueTooltip:              'Overdue: Past the TODO\'s date.',
   todayTooltip:              'Today: Scheduled for Today',
   scheduledTooltip:          'Scheduled: Scheduled for a future date',
   stakeholderTooltip:        'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
@@ -155,9 +155,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 			.setDesc('This is the regular expression to capture the action tag. The default is #discussWith, to mark an action to discuss something with someone.')
 			.addText(text => text
 				.setPlaceholder('#(discussWith)')
-        .setValue(this.plugin.settings.discussWithRegexpString)
+        .setValue(this.plugin.settings.actionTagOneRegexpString)
 				.onChange(async (value) => {
-					this.plugin.settings.discussWithRegexpString = value;
+					this.plugin.settings.actionTagOneRegexpString = value;
 					await this.plugin.saveFilterSettings();
 				}));
 
@@ -166,9 +166,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc('This is the regular expression to capture the action tag. The default is #waitingFor, to mark an action to follow up with someone on a promise.')
       .addText(text => text
         .setPlaceholder('#(waitingFor)')
-        .setValue(this.plugin.settings.waitingForRegexpString)
+        .setValue(this.plugin.settings.actionTagTwoRegexpString)
         .onChange(async (value) => {
-          this.plugin.settings.waitingForRegexpString = value;
+          this.plugin.settings.actionTagTwoRegexpString = value;
           await this.plugin.saveFilterSettings();
         }));        
     
@@ -177,9 +177,9 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc('This is the regular expression to capture the action tag. The default is set to capture #promisedTo, to mark an action to remind you that you have promised something to someone.')
       .addText(text => text
         .setPlaceholder('#(promisedTo)')
-        .setValue(this.plugin.settings.promisedToRegexpString)
+        .setValue(this.plugin.settings.actionTagThreeRegexpString)
         .onChange(async (value) => {
-          this.plugin.settings.promisedToRegexpString = value;
+          this.plugin.settings.actionTagThreeRegexpString = value;
           await this.plugin.saveFilterSettings();
         }));        
 
@@ -273,18 +273,18 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName('Show/hide Overdue')
         .addToggle(value => value
-          .setValue(this.plugin.settings.isAgingVisible)
+          .setValue(this.plugin.settings.isOverdueVisible)
           .onChange(async (value) => {
-            this.plugin.settings.isAgingVisible = value;
+            this.plugin.settings.isOverdueVisible = value;
             await this.plugin.saveViewDisplaySettings();
           }));  
       new Setting(containerEl)
         .setName('Overdue tooltip')
         .addTextArea(text => {
-          let t = text.setPlaceholder(DEFAULT_SETTINGS.agingTooltip)
-          .setValue(this.plugin.settings.agingTooltip)
+          let t = text.setPlaceholder(DEFAULT_SETTINGS.overdueTooltip)
+          .setValue(this.plugin.settings.overdueTooltip)
           .onChange(async (value) => {
-            this.plugin.settings.agingTooltip = value == '' ? DEFAULT_SETTINGS.agingTooltip : value;
+            this.plugin.settings.overdueTooltip = value == '' ? DEFAULT_SETTINGS.overdueTooltip : value;
             await this.plugin.saveViewDisplaySettings();
           });
           t.inputEl.setAttr("rows", 4);

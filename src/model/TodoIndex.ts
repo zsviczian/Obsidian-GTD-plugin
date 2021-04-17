@@ -8,9 +8,9 @@ export interface TodoItemIndexProps {
   locationRegexp:     RegExp;
   miscRegexp:         RegExp;
   dateRegexp:         RegExp;
-  discussWithRegexp:  RegExp;
-  waitingForRegexp:   RegExp;
-  promisedToRegexp:   RegExp;
+  actionTagOneRegexp:  RegExp;
+  actionTagTwoRegexp:   RegExp;
+  actionTagThreeRegexp:   RegExp;
   somedayMaybeRegexp: RegExp;
   excludeTagRegexp:   RegExp;
   excludePath:        string;
