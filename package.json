@@ -1,7 +1,7 @@
 {
   "name": "obsidian-gtd-plugin",
   "version": "0.9.7",
-  "description": "GTD action tracker",
+  "description": "Obsidian GTD action tracker",
   "main": "main.js",
   "scripts": {
     "build": "rollup --config rollup.config.js --environment BUILD:production",

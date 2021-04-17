@@ -9,15 +9,15 @@ export enum TodoItemViewPane {
   Scheduled,
   Inbox,
   Someday,
-  Stakeholder,
+  ContextAction,
 }
 
 enum TodoSortStates {
   None,
   DateAsc,
   DateDesc,
-  StakeholderAsc,
-  StakeholderDesc,
+  ContextActionAsc,
+  ContextActionDesc,
   ProjectAsc,
   ProjectDesc,
   MiscAsc,
@@ -27,21 +27,21 @@ enum TodoSortStates {
 }
 
 export interface TodoItemViewProps {
-  todos:                TodoItem[];
-  openFile:             (filePath: string) => void;
-  toggleTodo:           (todo: TodoItem, newStatus: TodoItemStatus) => void;
-  isInboxVisible:       boolean;
-  isOverdueVisible:     boolean;
-  isTodayVisible:       boolean;
-  isScheduledVisible:   boolean;
-  isStakeholderVisible: boolean;
-  isSomedayVisible:     boolean;
-  inboxTooltip:         string;
-  overdueTooltip:       string;
-  todayTooltip:         string;
-  scheduledTooltip:     string;
-  stakeholderTooltip:   string;
-  somedayTooltip:       string;
+  todos:                  TodoItem[];
+  openFile:               (filePath: string) => void;
+  toggleTodo:             (todo: TodoItem, newStatus: TodoItemStatus) => void;
+  isInboxVisible:         boolean;
+  isOverdueVisible:       boolean;
+  isTodayVisible:         boolean;
+  isScheduledVisible:     boolean;
+  isContextActionVisible: boolean;
+  isSomedayVisible:       boolean;
+  inboxTooltip:           string;
+  overdueTooltip:         string;
+  todayTooltip:           string;
+  scheduledTooltip:       string;
+  contextActionTooltip:   string;
+  somedayTooltip:         string;
 }
 
 interface TodoItemViewState {
@@ -61,7 +61,6 @@ export class TodoItemView extends ItemView {
   private sortStateCount;
 
   constructor(leaf: WorkspaceLeaf, props: TodoItemViewProps) {
-    //debugger;
     super(leaf);
     this.props = props;
     this.state = {
@@ -95,13 +94,13 @@ export class TodoItemView extends ItemView {
     this.props.isOverdueVisible = props.isOverdueVisible;
     this.props.isTodayVisible = props.isTodayVisible;
     this.props.isScheduledVisible = props.isScheduledVisible;
-    this.props.isStakeholderVisible = props.isStakeholderVisible;
+    this.props.isContextActionVisible = props.isContextActionVisible;
     this.props.isSomedayVisible = props.isSomedayVisible;
     this.props.inboxTooltip = props.inboxTooltip;
     this.props.overdueTooltip = props.overdueTooltip;
     this.props.todayTooltip = props.todayTooltip;
     this.props.scheduledTooltip = props.scheduledTooltip;
-    this.props.stakeholderTooltip = props.stakeholderTooltip;
+    this.props.contextActionTooltip = props.contextActionTooltip;
     this.props.somedayTooltip = props.somedayTooltip;
     this.render();
   }
@@ -115,8 +114,8 @@ export class TodoItemView extends ItemView {
     this.state = newState;
     if(newState.activePane == TodoItemViewPane.Overdue || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
       this.sortState = {state: TodoSortStates.DateAsc};
-    else if (newState.activePane == TodoItemViewPane.Stakeholder)
-      this.sortState = {state: TodoSortStates.StakeholderAsc};
+    else if (newState.activePane == TodoItemViewPane.ContextAction)
+      this.sortState = {state: TodoSortStates.ContextActionAsc};
     else 
       this.sortState = {state: TodoSortStates.FullTextAsc};
     this.render();
@@ -173,9 +172,9 @@ export class TodoItemView extends ItemView {
           return 'Sort by: Action Date Descending';
         case TodoSortStates.DateAsc:
           return 'Sort by: Action Date Ascending';
-        case TodoSortStates.StakeholderDesc:
+        case TodoSortStates.ContextActionDesc:
           return 'Sort by: Person Descending';
-        case TodoSortStates.StakeholderAsc:
+        case TodoSortStates.ContextActionAsc:
           return 'Sort by: Person Ascending';
         case TodoSortStates.ProjectDesc:
           return 'Sort by: Project Descending';
@@ -246,10 +245,10 @@ export class TodoItemView extends ItemView {
         el.onClickEvent(() => setActivePane(TodoItemViewPane.Scheduled));
       });
 
-    if (this.props.isStakeholderVisible)
-      container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Stakeholder)}`, (el) => {
-        el.appendChild(RenderIcon(Icon.Stakeholder, this.props.stakeholderTooltip));
-        el.onClickEvent(() => setActivePane(TodoItemViewPane.Stakeholder));
+    if (this.props.isContextActionVisible)
+      container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.ContextAction)}`, (el) => {
+        el.appendChild(RenderIcon(Icon.ContextAction, this.props.contextActionTooltip));
+        el.onClickEvent(() => setActivePane(TodoItemViewPane.ContextAction));
       });
 
     if (this.props.isSomedayVisible)  
@@ -310,9 +309,9 @@ export class TodoItemView extends ItemView {
         sortResult = a.actionDate < b.actionDate ? -1 : a.actionDate > b.actionDate ? 1 : 0;break;
       case TodoSortStates.DateDesc:
         sortResult = a.actionDate > b.actionDate ? -1 : a.actionDate < b.actionDate ? 1 : 0;break;
-      case TodoSortStates.StakeholderAsc:
+      case TodoSortStates.ContextActionAsc:
         sortResult = a.person < b.person ? -1 : a.person > b.person ? 1 : 0;break;
-      case TodoSortStates.StakeholderDesc:
+      case TodoSortStates.ContextActionDesc:
         sortResult = a.person > b.person ? -1 : a.person < b.person ? 1 : 0;break;
       case TodoSortStates.ProjectAsc:
         sortResult = a.project < b.project ? -1 : a.project > b.project ? 1 : 0;break;
@@ -328,7 +327,7 @@ export class TodoItemView extends ItemView {
         sortResult = a.description.toLowerCase() > b.description.toLowerCase() ? -1 : a.description.toLowerCase() < b.description.toLowerCase() ? 1 : 0;break;
     } 
 
-    if (this.state.activePane == TodoItemViewPane.Stakeholder) {
+    if (this.state.activePane == TodoItemViewPane.ContextAction) {
       if (a.isDiscussWithNote && !b.isDiscussWithNote) {
         return -1;
       }
@@ -391,7 +390,7 @@ export class TodoItemView extends ItemView {
           return isTodayNote;
         case TodoItemViewPane.Overdue:
             return isOverdueNote;
-        case TodoItemViewPane.Stakeholder:
+        case TodoItemViewPane.ContextAction:
           return hasContext && isPeopleActionNote ;
       }
     } else return false;

@@ -16,21 +16,21 @@ https://github.com/zsviczian/obsidian-stakeholder-actions
 `;
 
 export default {
-  input: 'src/main.ts',
+  input: './src/main.ts',
   output: {
     dir: isProd ? './dist' : '.',
     sourcemap: 'inline',
-    sourcemapExcludeSources: isProd,
+//    sourcemapExcludeSources: isProd,
     format: 'cjs',
     exports: 'default',
-    banner
+    banner,
   },
   external: ['obsidian'],
-  plugins: [typescript(), 
+  plugins: [copyAndWatch('src/styles.css','styles.css',true),
+            copyAndWatch('src/manifest.json','manifest.json',true),
+            typescript({inlineSources: !isProd}), 
             nodeResolve({ browser: true }), 
-            commonjs(),
-            copyAndWatch('src/styles.css','styles.css',true),
-            copyAndWatch('src/manifest.json','manifest.json',true)],
+            commonjs()],
 };
 
 function copyAndWatch(fileIn, fileOut, isProd) {

@@ -1,10 +1,10 @@
-import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf, } from 'obsidian';
+import { App, Plugin, PluginManifest, TFile, WorkspaceLeaf} from 'obsidian';
 import { VIEW_TYPE_TODO } from './constants';
 import { TodoItemView, TodoItemViewProps, TodoItemViewPane } from './ui/TodoItemView';
 import { TodoItem, TodoItemStatus } from './model/TodoItem';
 import { TodoIndex,TodoItemIndexProps } from './model/TodoIndex';
 import {DEFAULT_SETTINGS, ActionTrackerSettings, ActionTrackerSettingTab} from './settings';
-import { stringify } from 'querystring';
+//import { stringify } from 'querystring';
 
 
 export default class ActionTrackerPlugin extends Plugin {
@@ -35,7 +35,6 @@ export default class ActionTrackerPlugin extends Plugin {
 
   async onload(): Promise<void> {
     console.log('loading plugin');
-    
     await this.loadSettings();
     
     this.todoIndex = new TodoIndex(this.app.vault, this.tick.bind(this),this.getTodoItemIndexProps());
@@ -52,16 +51,16 @@ export default class ActionTrackerPlugin extends Plugin {
           this.todoIndex.setStatus(todo, newStatus);
         },
         isInboxVisible:       this.getSettingValue('isInboxVisible'),
-        isOverdueVisible:       this.getSettingValue('isOverdueVisible'),
+        isOverdueVisible:     this.getSettingValue('isOverdueVisible'),
         isTodayVisible:       this.getSettingValue('isTodayVisible'),
         isScheduledVisible:   this.getSettingValue('isScheduledVisible'),
-        isStakeholderVisible: this.getSettingValue('isStakeholderVisible'),
+        isContextActionVisible: this.getSettingValue('isContextActionVisible'),
         isSomedayVisible:     this.getSettingValue('isSomedayVisible'),
         inboxTooltip:         this.getSettingValue('inboxTooltip'),
-        overdueTooltip:         this.getSettingValue('overdueTooltip'),
+        overdueTooltip:       this.getSettingValue('overdueTooltip'),
         todayTooltip:         this.getSettingValue('todayTooltip'),
         scheduledTooltip:     this.getSettingValue('scheduledTooltip'),
-        stakeholderTooltip:   this.getSettingValue('stakeholderTooltip'),
+        contextActionTooltip:   this.getSettingValue('contextActionTooltip'),
         somedayTooltip:       this.getSettingValue('somedayTooltip'),
       };
       this.view = new TodoItemView(leaf, props);
@@ -73,37 +72,79 @@ export default class ActionTrackerPlugin extends Plugin {
     this.addCommand({
       id: "show-inbox-view",
       name: "Inbox View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Inbox}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isInboxVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.Inbox});
+          return true;
+        }
+      },
     });
 
     this.addCommand({
       id: "show-overdue-view",
       name: "Overdue View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Overdue}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isOverdueVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.Overdue});
+          return true;
+        }
+      },
     });
-
+    
     this.addCommand({
       id: "show-today-view",
       name: "Today View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Today}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isTodayVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.Today});
+          return true;
+        }
+      },      
     });
 
     this.addCommand({
       id: "show-scheduled-view",
       name: "Scheduled View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Scheduled}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isScheduledVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.Scheduled});
+          return true;
+        }
+      },  
     });
 
     this.addCommand({
       id: "show-context-actions-view",
       name: "Context Actions View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Stakeholder}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isContextActionVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.ContextAction});
+          return true;
+        }
+      },  
     });
 
     this.addCommand({
       id: "show-someday-view",
       name: "Someday/Maybe View",
-      callback: () => this.view.setViewState({activePane: TodoItemViewPane.Someday}),
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.getSettingValue('isSomedayVisible');
+        } else {
+          this.view.setViewState({activePane: TodoItemViewPane.Someday});
+          return true;
+        }
+      },  
     });
 
     if (this.app.workspace.layoutReady) {
@@ -160,13 +201,13 @@ export default class ActionTrackerPlugin extends Plugin {
       isOverdueVisible:     this.getSettingValue('isOverdueVisible'),
       isTodayVisible:       this.getSettingValue('isTodayVisible'),
       isScheduledVisible:   this.getSettingValue('isScheduledVisible'),
-      isStakeholderVisible: this.getSettingValue('isStakeholderVisible'),
+      isContextActionVisible: this.getSettingValue('isContextActionVisible'),
       isSomedayVisible:     this.getSettingValue('isSomedayVisible'),
       inboxTooltip:         this.getSettingValue('inboxTooltip'),
       overdueTooltip:       this.getSettingValue('overdueTooltip'),
       todayTooltip:         this.getSettingValue('todayTooltip'),
       scheduledTooltip:     this.getSettingValue('scheduledTooltip'),
-      stakeholderTooltip:   this.getSettingValue('stakeholderTooltip'),
+      contextActionTooltip:   this.getSettingValue('contextActionTooltip'),
       somedayTooltip:       this.getSettingValue('somedayTooltip'),
     });
   }

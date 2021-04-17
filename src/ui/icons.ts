@@ -4,7 +4,7 @@ export enum Icon {
   Scheduled,
   Someday,
   Today,
-  Stakeholder,
+  ContextAction,
   Overdue,
   Sort,
 }
@@ -28,8 +28,8 @@ const svgForIcon = (icon: Icon): ((arg0: string, arg1: string) => string) => {
       return somedayIcon;
     case Icon.Today:
       return todayIcon;
-    case Icon.Stakeholder:
-      return stakeholderIcon;
+    case Icon.ContextAction:
+      return contextActionIcon;
     case Icon.Overdue:
       return overdueIcon;
     case Icon.Sort:
@@ -85,7 +85,7 @@ const todayIcon = (title: string, description: string): string => `
 </svg>
 `;
 
-const stakeholderIcon = (title: string, description: string): string => `
+const contextActionIcon = (title: string, description: string): string => `
 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 16 24" width="16" height="24" viewBox="0 0 16 24" aria-label="${title + description}">
   <title>${title}</title>
   <description>${description}</description>

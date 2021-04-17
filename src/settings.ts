@@ -18,13 +18,13 @@ export interface ActionTrackerSettings {
   isOverdueVisible:            boolean,
   isTodayVisible:            boolean,
   isScheduledVisible:        boolean,
-  isStakeholderVisible:      boolean,
+  isContextActionVisible:      boolean,
   isSomedayVisible:          boolean,
   inboxTooltip:              string,
   overdueTooltip:              string,
   todayTooltip:              string,
   scheduledTooltip:          string,
-  stakeholderTooltip:        string,
+  contextActionTooltip:        string,
   somedayTooltip:            string,
 }
 
@@ -45,13 +45,13 @@ export const DEFAULT_SETTINGS: ActionTrackerSettings = {
   isOverdueVisible:            true,
   isTodayVisible:            true,
   isScheduledVisible:        true,
-  isStakeholderVisible:      true,
+  isContextActionVisible:      true,
   isSomedayVisible:          true,
   inboxTooltip:              'Inbox: Unclassified TODOs, i.e. without a date; without an Action Tag and a Context; without someday/maybe tag.',
   overdueTooltip:              'Overdue: Past the TODO\'s date.',
   todayTooltip:              'Today: Scheduled for Today',
   scheduledTooltip:          'Scheduled: Scheduled for a future date',
-  stakeholderTooltip:        'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
+  contextActionTooltip:        'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
   somedayTooltip:            'Someday / Maybe',
 }
 
@@ -339,18 +339,18 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
           new Setting(containerEl)
             .setName('Show/hide Context Actions')
             .addToggle(value => value
-              .setValue(this.plugin.settings.isStakeholderVisible)
+              .setValue(this.plugin.settings.isContextActionVisible)
               .onChange(async (value) => {
-                this.plugin.settings.isStakeholderVisible = value;
+                this.plugin.settings.isContextActionVisible = value;
                 await this.plugin.saveViewDisplaySettings();
               }));  
           new Setting(containerEl)
             .setName('Context Actions tooltip')
             .addTextArea(text => {
-              let t = text.setPlaceholder(DEFAULT_SETTINGS.stakeholderTooltip)
-              .setValue(this.plugin.settings.stakeholderTooltip)
+              let t = text.setPlaceholder(DEFAULT_SETTINGS.contextActionTooltip)
+              .setValue(this.plugin.settings.contextActionTooltip)
               .onChange(async (value) => {
-                this.plugin.settings.stakeholderTooltip = value == '' ? DEFAULT_SETTINGS.stakeholderTooltip : value;
+                this.plugin.settings.contextActionTooltip = value == '' ? DEFAULT_SETTINGS.contextActionTooltip : value;
                 await this.plugin.saveViewDisplaySettings();
               });
               t.inputEl.setAttr("rows", 4);
