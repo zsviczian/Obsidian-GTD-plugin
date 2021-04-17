@@ -5,7 +5,6 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 
 ### Features
 - Everything customizable. Date formats, tags, view visibility
-- Exclusions based on folder (e.g. Templated folder), based on filename (e.g. Holiday checklist.md; Publish Checklist.md; etc), based on TODO content (e.g. #exclude tag)
 - Aggregates all outstanding TODOs in your vault and lists them in a single view
 - Split out TODOs by type ("Inbox", "Overdue", "Today", "Scheduled", "Context Actions, and "Someday/Maybe")
 - Schedule a TODO for a specific date by adding a tag #YYYY/DD/MM
@@ -14,6 +13,7 @@ Based on [larslockefeer/obsidian-plugin-todo](https://github.com/larslockefeer/o
 - Complete TODOs from the list view
 - Quickly jump to the file in which a TODO is found from the list view
 - Filter TODOs based on Context. Default setting assumes [[Pepole/Name]], [[Projects/Name]], [[Locations/Name]] naming convention for projects, people and locations.
+- Exclusions based on folder (e.g. Templated folder), based on filename (e.g. Holiday checklist.md; Publish Checklist.md; etc), based on TODO content (e.g. #exclude tag)
 
 ### Views
 - Unclassified TODOs show up in the Inbox. A TODO is unclassified if it does not meet any of these criteria: has a date, or has both a Context and an Action, or has a Someday/Maybe tag.
