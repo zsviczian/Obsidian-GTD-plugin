@@ -48,7 +48,7 @@ export const DEFAULT_SETTINGS: ActionTrackerSettings = {
   isContextActionVisible:      true,
   isSomedayVisible:          true,
   inboxTooltip:              'Inbox: Unclassified TODOs, i.e. without a date; without an Action Tag and a Context; without someday/maybe tag.',
-  overdueTooltip:              'Overdue: Past the TODO\'s date.',
+  overdueTooltip:              'Overdue: Past the TODO\'s due date.',
   todayTooltip:              'Today: Scheduled for Today',
   scheduledTooltip:          'Scheduled: Scheduled for a future date',
   contextActionTooltip:        'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
@@ -135,7 +135,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
     new Setting(containerEl)
         .setName('Date')
         .setDesc('This is the regular expression to capture the date for your TODO. You have two options: 1) If the RegExp captures 3 values, then '+
-                 'the first value must be the year (yyyy), the sceond the month (mm), and the third the day (dd). ' +
+                 'the first value must be the year (yyyy), the second the month (mm), and the third the day (dd). ' +
                  '2) If your RegExp captures a single value, then it must be a valid date based on your regional settings. For example: ' +
                  '#(\\d{4}\\-\\d{2}\\-\\d{2}) captures the following date yyyy-mm-dd')
         .addText(text => text
@@ -163,7 +163,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Action Tag 2')
-      .setDesc('This is the regular expression to capture the action tag. The default is #waitingFor, to mark an action to follow up with someone on a promise.')
+      .setDesc('This is the regular expression to capture the action tag. The default is #waitingFor, to mark an action to follow up with someone at a later time.')
       .addText(text => text
         .setPlaceholder('#(waitingFor)')
         .setValue(this.plugin.settings.actionTagTwoRegexpString)
@@ -185,10 +185,10 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
 
     this.containerEl.createEl('h3', {text: 'Someday/Maybe Tag'});
     this.containerEl.createEl('p', {text: 'Use this tag to mark TODOs that are deliberately without a deadline, a context and/or and action, such as ' +
-                                          'items on your bucket list. These TODOs will show up in the "Someday/Maybe view. ' + 
+                                          'items on your bucket list. These TODOs will show up in the "Someday/Maybe" view. ' + 
                                           'Note, that TODOs without a valid tag and without a deadline will show up in the Inbox.'});
     new Setting(containerEl)
-      .setName('Someday Maybe regexp pattern')
+      .setName('Someday/Maybe regexp pattern')
       .setDesc('This is the regular expression to identify the Someday/Maybe tag.')
       .addText(text => text
         .setPlaceholder('#(someday)')
@@ -202,8 +202,8 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
     this.containerEl.createEl('p', {text: 'Settings to define which TODOs to exclude from the view.'});
     new Setting(containerEl)
       .setName('Exclude path')
-      .setDesc('Intended for excluding your Templates folder. The files in this folder and all sub-folders will be excluded by O-GTD. The value given in this setting '+
-               'is matched to the beginning of the filepath using .startsWith(). If you set this value to Temp, then '+
+      .setDesc('Intended for excluding your templates folder. The files in this folder and all sub-folders will be excluded by O-GTD. The value given in this setting '+
+               'is matched to the beginning of the filepath using .startsWith() and is case-sensitive. If you set this value to Temp, then '+
                'all files on the filepath startring with the string given will be excluded. To stick with our example Temp will exclude all of the following folders: ' +
                'Templates/, Template/, Temp/, etc. but will not exclude templates/ or temp/... Exclude folder names are case sensitive.')
       .addText(text => text
@@ -219,7 +219,7 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
       .setDesc('Intended for filtering out a special type of file that can be identified based on filename, such as checklists. If you name all your checklists '+
                'with the word checklist in the file (e.g. "Holiday checklist.md", "Blog post checklist.md", "Checklist for Christmas.md", etc.), ' +
                'those files will all be excluded. Uses .toLowerCase().includes() to filter elements, i.e. the filename fragment is '+
-               'case insensitive')
+               'not case-sensitive')
       .addText(text => text
         .setPlaceholder('checklist')
         .setValue(this.plugin.settings.excludeFilenameFragment)
