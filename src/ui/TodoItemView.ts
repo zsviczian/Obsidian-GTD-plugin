@@ -438,14 +438,14 @@ class SortContextMenu extends Menu {
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.DateDesc ? 'checkmark' : '')
-        .setTitle("by date (new to old)")
+        .setTitle("by Date (new to old)")
         .onClick(async () => this.menuClick(TodoSortStates.DateDesc))
     )
     
     this.addItem((menuItem) =>
     menuItem
       .setIcon(sortState == TodoSortStates.DateAsc ? 'checkmark' : '')
-      .setTitle("by date (old to new)")
+      .setTitle("by Date (old to new)")
       .onClick(async () => this.menuClick(TodoSortStates.DateAsc))
     ) 
 
