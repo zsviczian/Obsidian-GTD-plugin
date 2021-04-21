@@ -23,27 +23,27 @@ export enum TodoSortStates {
   LocationAsc,
   LocationDesc,
   MiscAsc,
-  MiscDesc,  
+  MiscDesc,
   FullTextAsc,
   FullTextDesc,
 }
 
 export interface TodoItemViewProps {
-  todos:                  TodoItem[];
-  openFile:               (filePath: string) => void;
-  toggleTodo:             (todo: TodoItem, newStatus: TodoItemStatus) => void;
-  isInboxVisible:         boolean;
-  isOverdueVisible:       boolean;
-  isTodayVisible:         boolean;
-  isScheduledVisible:     boolean;
+  todos: TodoItem[];
+  openFile: (filePath: string) => void;
+  toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => void;
+  isInboxVisible: boolean;
+  isOverdueVisible: boolean;
+  isTodayVisible: boolean;
+  isScheduledVisible: boolean;
   isContextActionVisible: boolean;
-  isSomedayVisible:       boolean;
-  inboxTooltip:           string;
-  overdueTooltip:         string;
-  todayTooltip:           string;
-  scheduledTooltip:       string;
-  contextActionTooltip:   string;
-  somedayTooltip:         string;
+  isSomedayVisible: boolean;
+  inboxTooltip: string;
+  overdueTooltip: string;
+  todayTooltip: string;
+  scheduledTooltip: string;
+  contextActionTooltip: string;
+  somedayTooltip: string;
 }
 
 interface TodoItemViewState {
@@ -51,7 +51,7 @@ interface TodoItemViewState {
 }
 
 export interface TodoSortState {
-  state: TodoSortStates,
+  state: TodoSortStates;
 }
 
 export class TodoItemView extends ItemView {
@@ -71,10 +71,10 @@ export class TodoItemView extends ItemView {
     this.sortState = {
       state: TodoSortStates.None,
     };
-    this.sortStateCount = Object.values(TodoSortStates).length/2;
+    this.sortStateCount = Object.values(TodoSortStates).length / 2;
     this.filter = '';
   }
-  
+
   getViewType(): string {
     return VIEW_TYPE_TODO;
   }
@@ -106,7 +106,7 @@ export class TodoItemView extends ItemView {
     this.props.somedayTooltip = props.somedayTooltip;
     this.render();
   }
-  
+
   public setProps(setter: (currentProps: TodoItemViewProps) => TodoItemViewProps): void {
     this.props = setter(this.props);
     this.render();
@@ -114,12 +114,15 @@ export class TodoItemView extends ItemView {
 
   public setViewState(newState: TodoItemViewState) {
     this.state = newState;
-    if(newState.activePane == TodoItemViewPane.Overdue || newState.activePane == TodoItemViewPane.Scheduled || newState.activePane == TodoItemViewPane.Today)
-      this.sortState = {state: TodoSortStates.DateAsc};
+    if (
+      newState.activePane == TodoItemViewPane.Overdue ||
+      newState.activePane == TodoItemViewPane.Scheduled ||
+      newState.activePane == TodoItemViewPane.Today
+    )
+      this.sortState = { state: TodoSortStates.DateAsc };
     else if (newState.activePane == TodoItemViewPane.ContextAction)
-      this.sortState = {state: TodoSortStates.PersonAsc};
-    else 
-      this.sortState = {state: TodoSortStates.FullTextAsc};
+      this.sortState = { state: TodoSortStates.PersonAsc };
+    else this.sortState = { state: TodoSortStates.FullTextAsc };
     this.render();
   }
 
@@ -134,11 +137,11 @@ export class TodoItemView extends ItemView {
 
   private setFilter(filter: string) {
     this.filter = filter;
-    this.filterRegexp = new RegExp(filter,'i');
+    this.filterRegexp = new RegExp(filter, 'i');
     this.renderViewItemsOnly();
   }
 
-  private renderViewItemsOnly():void {
+  private renderViewItemsOnly(): void {
     const container = this.containerEl.children[1].children[0];
     container.children[2].remove();
     container.createDiv('todo-item-view-items', (el) => {
@@ -164,13 +167,11 @@ export class TodoItemView extends ItemView {
 
   private renderSearch(container: HTMLDivElement) {
     const activeClass = () => {
-      if (this.sortState.state == TodoSortStates.None) 
-        return ' none';
-      else 
-        return ' active';
+      if (this.sortState.state == TodoSortStates.None) return ' none';
+      else return ' active';
     };
 
-    const sortLabel = (sortState:TodoSortStates) => {
+    const sortLabel = (sortState: TodoSortStates) => {
       switch (sortState) {
         case TodoSortStates.None:
           return 'Sort by: none';
@@ -199,11 +200,11 @@ export class TodoItemView extends ItemView {
         case TodoSortStates.FullTextAsc:
           return 'Sort by: Full Text Ascending';
       }
-    }
+    };
 
-    container.createEl('input', {value: this.filter}, (el) => {
+    container.createEl('input', { value: this.filter }, (el) => {
       el.addClass('todo-filter-input');
-      el.setAttribute('placeholder','context filter, RegExp case insensitive');
+      el.setAttribute('placeholder', 'context filter, RegExp case insensitive');
       el.onkeyup = (e) => {
         this.setFilter((<HTMLInputElement>e.target).value);
       };
@@ -212,9 +213,9 @@ export class TodoItemView extends ItemView {
     container.createDiv(`todo-item-view-sort${activeClass()}`, (el) => {
       el.appendChild(RenderIcon(Icon.Sort, sortLabel(this.sortState.state)));
       el.onClickEvent((e) => {
-        const menu = new SortContextMenu(this.app, this, {x: e.clientX, y: e.clientY});
-//        const nextSortState = (this.sortState.state + 1) % this.sortStateCount;
-//        this.setSortState({state: nextSortState});
+        const menu = new SortContextMenu(this.app, this, { x: e.clientX, y: e.clientY });
+        //        const nextSortState = (this.sortState.state + 1) % this.sortStateCount;
+        //        this.setSortState({state: nextSortState});
       });
     });
   }
@@ -262,7 +263,7 @@ export class TodoItemView extends ItemView {
         el.onClickEvent(() => setActivePane(TodoItemViewPane.ContextAction));
       });
 
-    if (this.props.isSomedayVisible)  
+    if (this.props.isSomedayVisible)
       container.createDiv(`todo-item-view-toolbar-item${activeClass(TodoItemViewPane.Someday)}`, (el) => {
         el.appendChild(RenderIcon(Icon.Someday, this.props.somedayTooltip));
         el.onClickEvent(() => setActivePane(TodoItemViewPane.Someday));
@@ -271,76 +272,111 @@ export class TodoItemView extends ItemView {
 
   private renderItems(container: HTMLDivElement) {
     const sortView = (a: TodoItem, b: TodoItem) => {
-      return this.sortView(a,b);
+      return this.sortView(a, b);
     };
-    const todosToRender = this.props.todos
-                            .filter(this.filterForState, this);
+    const todosToRender = this.props.todos.filter(this.filterForState, this);
     const sortedTodos = todosToRender.sort(sortView);
-    sortedTodos
-      .forEach((todo,index) => {
-        if(index>0) {
-          if( (todo.isWaitingForNote && todosToRender[index-1].isDiscussWithNote) || 
-              (todo.isPromisedToNote && 
-                (todosToRender[index-1].isWaitingForNote || todosToRender[index-1].isDiscussWithNote)) ||
-              (!todo.isPromisedToNote && !todo.isWaitingForNote && !todo.isDiscussWithNote && 
-                (todosToRender[index-1].isWaitingForNote || todosToRender[index-1].isDiscussWithNote || todosToRender[index-1].isPromisedToNote)) ) {
-            container.createEl('hr', {} ,(el) => {
-              el.addClass('todo-item-view-divider');
-            });
-          }
-        } 
-        container.createDiv('todo-item-view-item', (el) => {
-          el.createDiv('todo-item-view-item-checkbox', (el) => {
-            el.createEl('input', { type: 'checkbox' }, (el) => {
-              el.checked = todo.status === TodoItemStatus.Done;
-              el.onClickEvent(() => {
-                this.toggleTodo(todo);
-              });
-            });
+    sortedTodos.forEach((todo, index, arr) => {
+      if (index > 0) {
+        if (
+          (todo.isWaitingForNote && todosToRender[index - 1].isDiscussWithNote) ||
+          (todo.isPromisedToNote &&
+            (todosToRender[index - 1].isWaitingForNote || todosToRender[index - 1].isDiscussWithNote)) ||
+          (!todo.isPromisedToNote &&
+            !todo.isWaitingForNote &&
+            !todo.isDiscussWithNote &&
+            (todosToRender[index - 1].isWaitingForNote ||
+              todosToRender[index - 1].isDiscussWithNote ||
+              todosToRender[index - 1].isPromisedToNote))
+        ) {
+          container.createEl('hr', {}, (el) => {
+            el.addClass('todo-item-view-divider');
           });
-          el.createDiv('todo-item-view-item-description', (el) => {
-            MarkdownRenderer.renderMarkdown(todo.description, el, todo.sourceFilePath, this);
+        }
+      }
+      if (index === 0 || todo.sourceFilePath !== arr[index - 1].sourceFilePath) {
+        container.createDiv('todo-item-view-item-description-file', (el) => {
+          MarkdownRenderer.renderMarkdown(`${todo.sourceFilePath.split('.md')[0]}`, el, todo.sourceFilePath, this);
+          el.onClickEvent(() => {
+            this.openFile(todo);
           });
-          el.createDiv('todo-item-view-item-link', (el) => {
-            el.appendChild(RenderIcon(Icon.Reveal, 'Open file'));
+        });
+      }
+      container.createDiv('todo-item-view-item', (el) => {
+        el.createDiv('todo-item-view-item-checkbox', (el) => {
+          el.createEl('input', { type: 'checkbox' }, (el) => {
+            el.checked = todo.status === TodoItemStatus.Done;
             el.onClickEvent(() => {
-              this.openFile(todo);
+              this.toggleTodo(todo);
             });
           });
         });
+        el.createDiv('todo-item-view-item-description', (el) => {
+          MarkdownRenderer.renderMarkdown(`${todo.description}`, el, todo.sourceFilePath, this);
+        });
+        el.createDiv('todo-item-view-item-link', (el) => {
+          el.appendChild(RenderIcon(Icon.Reveal, 'Open file'));
+          el.onClickEvent(() => {
+            this.openFile(todo);
+          });
+        });
       });
+    });
   }
 
   private sortView(a: TodoItem, b: TodoItem) {
     let sortResult = 0;
     switch (this.sortState.state) {
       case TodoSortStates.None:
-        sortResult = 0;break;
+        sortResult = 0;
+        break;
       case TodoSortStates.DateAsc:
-        sortResult = a.actionDate < b.actionDate ? -1 : a.actionDate > b.actionDate ? 1 : 0;break;
+        sortResult = a.actionDate < b.actionDate ? -1 : a.actionDate > b.actionDate ? 1 : 0;
+        break;
       case TodoSortStates.DateDesc:
-        sortResult = a.actionDate > b.actionDate ? -1 : a.actionDate < b.actionDate ? 1 : 0;break;
+        sortResult = a.actionDate > b.actionDate ? -1 : a.actionDate < b.actionDate ? 1 : 0;
+        break;
       case TodoSortStates.PersonAsc:
-        sortResult = a.person < b.person ? -1 : a.person > b.person ? 1 : 0;break;
+        sortResult = a.person < b.person ? -1 : a.person > b.person ? 1 : 0;
+        break;
       case TodoSortStates.PersonDesc:
-        sortResult = a.person > b.person ? -1 : a.person < b.person ? 1 : 0;break;
+        sortResult = a.person > b.person ? -1 : a.person < b.person ? 1 : 0;
+        break;
       case TodoSortStates.ProjectAsc:
-        sortResult = a.project < b.project ? -1 : a.project > b.project ? 1 : 0;break;
+        sortResult = a.project < b.project ? -1 : a.project > b.project ? 1 : 0;
+        break;
       case TodoSortStates.ProjectDesc:
-        sortResult = a.project > b.project ? -1 : a.project < b.project ? 1 : 0;break;
+        sortResult = a.project > b.project ? -1 : a.project < b.project ? 1 : 0;
+        break;
       case TodoSortStates.LocationAsc:
-        sortResult = a.location < b.location ? -1 : a.location > b.location ? 1 : 0;break;
+        sortResult = a.location < b.location ? -1 : a.location > b.location ? 1 : 0;
+        break;
       case TodoSortStates.LocationDesc:
-        sortResult = a.location > b.location ? -1 : a.location < b.location ? 1 : 0;break;
+        sortResult = a.location > b.location ? -1 : a.location < b.location ? 1 : 0;
+        break;
       case TodoSortStates.MiscAsc:
-        sortResult = a.misc < b.misc ? -1 : a.misc > b.misc ? 1 : 0;break;
+        sortResult = a.misc < b.misc ? -1 : a.misc > b.misc ? 1 : 0;
+        break;
       case TodoSortStates.MiscDesc:
-        sortResult = a.misc > b.misc ? -1 : a.misc < b.misc ? 1 : 0;break;
+        sortResult = a.misc > b.misc ? -1 : a.misc < b.misc ? 1 : 0;
+        break;
       case TodoSortStates.FullTextAsc:
-        sortResult = a.description.toLowerCase() < b.description.toLowerCase() ? -1 : a.description.toLowerCase() > b.description.toLowerCase() ? 1 : 0;break;
+        sortResult =
+          a.description.toLowerCase() < b.description.toLowerCase()
+            ? -1
+            : a.description.toLowerCase() > b.description.toLowerCase()
+            ? 1
+            : 0;
+        break;
       case TodoSortStates.FullTextDesc:
-        sortResult = a.description.toLowerCase() > b.description.toLowerCase() ? -1 : a.description.toLowerCase() < b.description.toLowerCase() ? 1 : 0;break;
-    } 
+        sortResult =
+          a.description.toLowerCase() > b.description.toLowerCase()
+            ? -1
+            : a.description.toLowerCase() < b.description.toLowerCase()
+            ? 1
+            : 0;
+        break;
+    }
 
     if (this.state.activePane == TodoItemViewPane.ContextAction) {
       if (a.isDiscussWithNote && !b.isDiscussWithNote) {
@@ -360,19 +396,19 @@ export class TodoItemView extends ItemView {
       }
       if (b.isPromisedToNote && !a.isDiscussWithNote && !a.isWaitingForNote) {
         return 1;
-      } 
+      }
       return sortResult;
     }
     return sortResult;
   }
 
   private filterForState(value: TodoItem, _index: number, _array: TodoItem[]): boolean {
-    const isPersonMatch = value.person.match(this.filterRegexp) != null; 
-    const isProjectMatch = value.project.match(this.filterRegexp) != null; 
-    const isLocationMatch = value.location.match(this.filterRegexp) != null; 
-    const isMiscMatch = value.misc.match(this.filterRegexp) != null;  
-    const isFilterSet = this.filter!="";
-    const hasContext = value.person!='' || value.project!='' || value.location!='';
+    const isPersonMatch = value.person.match(this.filterRegexp) != null;
+    const isProjectMatch = value.project.match(this.filterRegexp) != null;
+    const isLocationMatch = value.location.match(this.filterRegexp) != null;
+    const isMiscMatch = value.misc.match(this.filterRegexp) != null;
+    const isFilterSet = this.filter != '';
+    const hasContext = value.person != '' || value.project != '' || value.location != '';
     const isPeopleActionNote = value.isDiscussWithNote || value.isWaitingForNote || value.isPromisedToNote;
     if (!isFilterSet || isPersonMatch || isProjectMatch || isMiscMatch || isLocationMatch) {
       const isToday = (date: Date) => {
@@ -385,18 +421,24 @@ export class TodoItemView extends ItemView {
       };
 
       const isBeforeToday = (date: Date) => {
-        let today = (new Date())
+        let today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
       };
 
       const isOverdueNote = value.actionDate && isBeforeToday(value.actionDate);
       const isTodayNote = value.actionDate && isToday(value.actionDate);
-      const isScheduledNote = !value.isSomedayMaybeNote && value.actionDate && !isTodayNote && !isOverdueNote;
+      const isScheduledNote = value.actionDate && !isTodayNote && !isOverdueNote;
 
       switch (this.state.activePane) {
         case TodoItemViewPane.Inbox:
-          return !value.isSomedayMaybeNote && !isTodayNote && !isScheduledNote && !isOverdueNote && !(isPeopleActionNote && hasContext) ;
+          return (
+            !value.isSomedayMaybeNote &&
+            !isTodayNote &&
+            !isScheduledNote &&
+            !isOverdueNote &&
+            !(isPeopleActionNote && hasContext)
+          );
         case TodoItemViewPane.Scheduled:
           return isScheduledNote;
         case TodoItemViewPane.Someday:
@@ -404,9 +446,9 @@ export class TodoItemView extends ItemView {
         case TodoItemViewPane.Today:
           return isTodayNote;
         case TodoItemViewPane.Overdue:
-            return isOverdueNote;
+          return isOverdueNote;
         case TodoItemViewPane.ContextAction:
-          return hasContext && isPeopleActionNote ;
+          return hasContext && isPeopleActionNote;
       }
     } else return false;
   }
@@ -429,100 +471,100 @@ class SortContextMenu extends Menu {
     this.view = view;
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.None ? 'checkmark' : '')
-      .setTitle("don't sort")
-      .onClick(async () => this.menuClick(TodoSortStates.None))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.None ? 'checkmark' : '')
+        .setTitle("don't sort")
+        .onClick(async () => this.menuClick(TodoSortStates.None)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.DateDesc ? 'checkmark' : '')
-        .setTitle("by Date (new to old)")
-        .onClick(async () => this.menuClick(TodoSortStates.DateDesc))
-    )
-    
-    this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.DateAsc ? 'checkmark' : '')
-      .setTitle("by Date (old to new)")
-      .onClick(async () => this.menuClick(TodoSortStates.DateAsc))
-    ) 
+        .setTitle('by Date (new to old)')
+        .onClick(async () => this.menuClick(TodoSortStates.DateDesc)),
+    );
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.PersonAsc ? 'checkmark' : '')
-      .setTitle("by Person (A to Z)")
-      .onClick(async () => this.menuClick(TodoSortStates.PersonAsc))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.DateAsc ? 'checkmark' : '')
+        .setTitle('by Date (old to new)')
+        .onClick(async () => this.menuClick(TodoSortStates.DateAsc)),
+    );
+
+    this.addItem((menuItem) =>
+      menuItem
+        .setIcon(sortState == TodoSortStates.PersonAsc ? 'checkmark' : '')
+        .setTitle('by Person (A to Z)')
+        .onClick(async () => this.menuClick(TodoSortStates.PersonAsc)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.PersonDesc ? 'checkmark' : '')
-        .setTitle("by Person (Z to A)")
-        .onClick(async () => this.menuClick(TodoSortStates.PersonDesc))
-    )
+        .setTitle('by Person (Z to A)')
+        .onClick(async () => this.menuClick(TodoSortStates.PersonDesc)),
+    );
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.ProjectAsc ? 'checkmark' : '')
-      .setTitle("by Project (A to Z)")
-      .onClick(async () => this.menuClick(TodoSortStates.ProjectAsc))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.ProjectAsc ? 'checkmark' : '')
+        .setTitle('by Project (A to Z)')
+        .onClick(async () => this.menuClick(TodoSortStates.ProjectAsc)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.ProjectDesc ? 'checkmark' : '')
-        .setTitle("by Project (Z to A)")
-        .onClick(async () => this.menuClick(TodoSortStates.ProjectDesc))
-    )
+        .setTitle('by Project (Z to A)')
+        .onClick(async () => this.menuClick(TodoSortStates.ProjectDesc)),
+    );
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.LocationAsc ? 'checkmark' : '')
-      .setTitle("by Location (A to Z)")
-      .onClick(async () => this.menuClick(TodoSortStates.LocationAsc))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.LocationAsc ? 'checkmark' : '')
+        .setTitle('by Location (A to Z)')
+        .onClick(async () => this.menuClick(TodoSortStates.LocationAsc)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.LocationDesc ? 'checkmark' : '')
-        .setTitle("by Location (Z to A)")
-        .onClick(async () => this.menuClick(TodoSortStates.LocationDesc))
-    )
+        .setTitle('by Location (Z to A)')
+        .onClick(async () => this.menuClick(TodoSortStates.LocationDesc)),
+    );
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.MiscAsc ? 'checkmark' : '')
-      .setTitle("by Misc Context (A to Z)")
-      .onClick(async () => this.menuClick(TodoSortStates.MiscAsc))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.MiscAsc ? 'checkmark' : '')
+        .setTitle('by Misc Context (A to Z)')
+        .onClick(async () => this.menuClick(TodoSortStates.MiscAsc)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.MiscDesc ? 'checkmark' : '')
-        .setTitle("by Misc Context (Z to A)")
-        .onClick(async () => this.menuClick(TodoSortStates.MiscDesc))
-    )
+        .setTitle('by Misc Context (Z to A)')
+        .onClick(async () => this.menuClick(TodoSortStates.MiscDesc)),
+    );
 
     this.addItem((menuItem) =>
-    menuItem
-      .setIcon(sortState == TodoSortStates.FullTextAsc ? 'checkmark' : '')
-      .setTitle("by TODO fulltext (A to Z)")
-      .onClick(async () => this.menuClick(TodoSortStates.FullTextAsc))
-    )
+      menuItem
+        .setIcon(sortState == TodoSortStates.FullTextAsc ? 'checkmark' : '')
+        .setTitle('by TODO fulltext (A to Z)')
+        .onClick(async () => this.menuClick(TodoSortStates.FullTextAsc)),
+    );
 
     this.addItem((menuItem) =>
       menuItem
         .setIcon(sortState == TodoSortStates.FullTextDesc ? 'checkmark' : '')
-        .setTitle("by TODO fulltext (Z to A)")
-        .onClick(async () => this.menuClick(TodoSortStates.FullTextDesc))
-    )
-    
+        .setTitle('by TODO fulltext (Z to A)')
+        .onClick(async () => this.menuClick(TodoSortStates.FullTextDesc)),
+    );
+
     this.showAtPosition(position);
   }
 
   private menuClick(sortState: TodoSortStates) {
-    this.view.setSortState({state: sortState});
+    this.view.setSortState({ state: sortState });
   }
 }
