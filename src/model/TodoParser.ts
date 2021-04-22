@@ -20,7 +20,6 @@ export class TodoParser {
     const description = entry[3];
 
     const dateMatches = description.match(this.props.dateRegexp);
-    console.log(dateMatches);
     let actionDate = undefined;
     if (dateMatches != null) {
       if (dateMatches.length == 4) {

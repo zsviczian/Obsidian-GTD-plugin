@@ -414,7 +414,7 @@ export class TodoItemView extends ItemView {
     const isPeopleActionNote = value.isDiscussWithNote || value.isWaitingForNote || value.isPromisedToNote;
     if (!isFilterSet || isPersonMatch || isProjectMatch || isMiscMatch || isLocationMatch) {
       const isToday = (date: Date) => {
-        let today = new Date();
+        const today = new Date();
         return (
           date.getDate() == today.getDate() &&
           date.getMonth() == today.getMonth() &&
@@ -423,7 +423,7 @@ export class TodoItemView extends ItemView {
       };
 
       const isBeforeToday = (date: Date) => {
-        let today = new Date();
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
       };

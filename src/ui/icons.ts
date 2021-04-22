@@ -86,7 +86,9 @@ const todayIcon = (title: string, description: string): string => `
 `;
 
 const contextActionIcon = (title: string, description: string): string => `
-<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 16 24" width="16" height="24" viewBox="0 0 16 24" aria-label="${title + description}">
+<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 16 24" width="16" height="24" viewBox="0 0 16 24" aria-label="${
+  title + description
+}">
   <title>${title}</title>
   <description>${description}</description>
   <path d="M0 0h24v16H0V0z" fill="none"/>

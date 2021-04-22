@@ -3,17 +3,17 @@ import { TodoItem, TodoItemStatus } from '../model/TodoItem';
 import { TodoParser } from '../model/TodoParser';
 
 export interface TodoItemIndexProps {
-  personRegexp:            RegExp;
-  projectRegexp:           RegExp;
-  locationRegexp:          RegExp;
-  miscRegexp:              RegExp;
-  dateRegexp:              RegExp;
-  actionTagOneRegexp:      RegExp;
-  actionTagTwoRegexp:      RegExp;
-  actionTagThreeRegexp:    RegExp;
-  somedayMaybeRegexp:      RegExp;
-  excludeTagRegexp:        RegExp;
-  excludePath:             string;
+  personRegexp: RegExp;
+  projectRegexp: RegExp;
+  locationRegexp: RegExp;
+  miscRegexp: RegExp;
+  dateRegexp: RegExp;
+  actionTagOneRegexp: RegExp;
+  actionTagTwoRegexp: RegExp;
+  actionTagThreeRegexp: RegExp;
+  somedayMaybeRegexp: RegExp;
+  excludeTagRegexp: RegExp;
+  excludePath: string;
   excludeFilenameFragment: string;
 }
 
@@ -34,7 +34,7 @@ export class TodoIndex {
     this.props = props;
     await this.initialize();
   }
-  
+
   async initialize(): Promise<void> {
     // TODO: persist index & last sync timestamp; only parse files that changed since then.
     const todoMap = new Map<string, TodoItem[]>();
@@ -43,8 +43,13 @@ export class TodoIndex {
 
     const markdownFiles = this.vault.getMarkdownFiles();
     for (const file of markdownFiles) {
-      if(!(this.props.excludePath!='' && file.path.startsWith(this.props.excludePath)) &&
-         !(this.props.excludeFilenameFragment!='' && file.path.toLowerCase().includes(this.props.excludeFilenameFragment))) {
+      if (
+        !(this.props.excludePath != '' && file.path.startsWith(this.props.excludePath)) &&
+        !(
+          this.props.excludeFilenameFragment != '' &&
+          file.path.toLowerCase().includes(this.props.excludeFilenameFragment)
+        )
+      ) {
         const todos = await this.parseTodosInFile(file);
         numberOfTodos += todos.length;
         if (todos.length > 0) {
@@ -55,9 +60,9 @@ export class TodoIndex {
 
     const totalTimeMs = new Date().getTime() - timeStart;
     console.log(
-      `[obsidian-stakeholder_action-plugin] Parsed ${numberOfTodos} TODOs from ${markdownFiles.length} markdown files in (${
-        totalTimeMs / 1000.0
-      }s)`,
+      `[obsidian-stakeholder_action-plugin] Parsed ${numberOfTodos} TODOs from ${
+        markdownFiles.length
+      } markdown files in (${totalTimeMs / 1000.0}s)`,
     );
     this.todos = todoMap;
     this.registerEventHandlers();
