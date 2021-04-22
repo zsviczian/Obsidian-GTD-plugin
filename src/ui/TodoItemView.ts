@@ -294,13 +294,15 @@ export class TodoItemView extends ItemView {
           });
         }
       }
-      if (index === 0 || todo.sourceFilePath !== arr[index - 1].sourceFilePath) {
-        container.createDiv('todo-item-view-item-description-file', (el) => {
-          MarkdownRenderer.renderMarkdown(`${todo.sourceFilePath.split('.md')[0]}`, el, todo.sourceFilePath, this);
-          el.onClickEvent(() => {
-            this.openFile(todo);
+      if (this.sortState.state === 0) {
+        if (index === 0 || todo.sourceFilePath !== arr[index - 1].sourceFilePath) {
+          container.createDiv('todo-item-view-item-description-file', (el) => {
+            MarkdownRenderer.renderMarkdown(`${todo.sourceFilePath.split('.md')[0]}`, el, todo.sourceFilePath, this);
+            el.onClickEvent(() => {
+              this.openFile(todo);
+            });
           });
-        });
+        }
       }
       container.createDiv('todo-item-view-item', (el) => {
         el.createDiv('todo-item-view-item-checkbox', (el) => {
@@ -425,7 +427,6 @@ export class TodoItemView extends ItemView {
         today.setHours(0, 0, 0, 0);
         return date < today;
       };
-
       const isOverdueNote = value.actionDate && isBeforeToday(value.actionDate);
       const isTodayNote = value.actionDate && isToday(value.actionDate);
       const isScheduledNote = value.actionDate && !isTodayNote && !isOverdueNote;
