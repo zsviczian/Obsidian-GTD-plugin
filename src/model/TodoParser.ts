@@ -1,5 +1,5 @@
 import { TodoItem, TodoItemStatus } from '../model/TodoItem';
-import { TodoItemIndexProps} from '../model/TodoIndex'
+import { TodoItemIndexProps } from '../model/TodoIndex';
 
 export class TodoParser {
   props: TodoItemIndexProps;
@@ -22,26 +22,34 @@ export class TodoParser {
     const dateMatches = description.match(this.props.dateRegexp);
     let actionDate = undefined;
     if (dateMatches != null) {
-      if(dateMatches.length == 4) {
-        actionDate = new Date(parseInt(dateMatches[1]), parseInt(dateMatches[2])-1,parseInt(dateMatches[3]),0, 0, 0, 0);
+      if (dateMatches.length == 4) {
+        actionDate = new Date(
+          parseInt(dateMatches[1]),
+          parseInt(dateMatches[2]) - 1,
+          parseInt(dateMatches[3]),
+          0,
+          0,
+          0,
+          0,
+        );
       } else if (dateMatches.length == 2) {
         actionDate = new Date(dateMatches[1]);
-      } 
-    }  
+      }
+    }
     const personMatches = description.match(this.props.personRegexp);
-    const person = personMatches != null ? personMatches[1] : "";
+    const person = personMatches != null ? personMatches[1] : '';
 
     const projectMatches = description.match(this.props.projectRegexp);
-    const project = projectMatches != null ? projectMatches[1] : "";
+    const project = projectMatches != null ? projectMatches[1] : '';
 
     const locationMatches = description.match(this.props.locationRegexp);
-    const location = locationMatches != null ? locationMatches[1] : "";
+    const location = locationMatches != null ? locationMatches[1] : '';
 
     const miscMatches = description.match(this.props.miscRegexp);
-    const misc = miscMatches != null ? miscMatches.length == 2 ? miscMatches[1] : "" : "";
+    const misc = miscMatches != null ? (miscMatches.length == 2 ? miscMatches[1] : '') : '';
 
     const excludeMatches = description.match(this.props.excludeTagRegexp);
-    const exclude = excludeMatches != null ? excludeMatches.length == 2 ? true : false : false;
+    const exclude = excludeMatches != null ? (excludeMatches.length == 2 ? true : false) : false;
 
     return new TodoItem(
       exclude ? TodoItemStatus.Done : status, //items that include the excludeTag are treated as completed TODOs
