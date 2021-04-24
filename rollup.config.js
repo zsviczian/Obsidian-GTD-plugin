@@ -26,9 +26,8 @@ export default {
   },
   external: ['obsidian'],
   plugins: [
-    copyAndWatch('src/styles.css', 'styles.css', true),
-    copyAndWatch('src/manifest.json', 'manifest.json', true),
-    isProd && copyAndWatch('main.js', 'dist/main.js', true),
+    copyAndWatch('src/styles.css', 'styles.css'),
+    copyAndWatch('src/manifest.json', 'manifest.json'),
     nodeResolve({ browser: true }),
     typescript({ inlineSources: !isProd }),
     commonjs(),
@@ -36,19 +35,17 @@ export default {
 };
 
 function copyAndWatch(fileIn, fileOut, isProd) {
-  if (isProd)
-    return {
-      name: 'copy-and-watch',
-      async buildStart() {
-        this.addWatchFile(fileIn);
-      },
-      async generateBundle() {
-        this.emitFile({
-          type: 'asset',
-          fileName: fileOut,
-          source: fs.readFileSync(fileIn),
-        });
-      },
-    };
-  else return null;
+  return {
+    name: 'copy-and-watch',
+    async buildStart() {
+      this.addWatchFile(fileIn);
+    },
+    async generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: fileOut,
+        source: fs.readFileSync(fileIn),
+      });
+    },
+  };
 }
