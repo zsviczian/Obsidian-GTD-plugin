@@ -17,7 +17,7 @@ https://github.com/zsviczian/obsidian-stakeholder-actions
 export default {
   input: './src/main.ts',
   output: {
-    dir: isProd ? './dist' : '.',
+    dir: '.',
     sourcemap: 'inline',
     //    sourcemapExcludeSources: isProd,
     format: 'cjs',
@@ -28,6 +28,7 @@ export default {
   plugins: [
     copyAndWatch('src/styles.css', 'styles.css', true),
     copyAndWatch('src/manifest.json', 'manifest.json', true),
+    isProd && copyAndWatch('main.js', 'dist/main.js', true),
     nodeResolve({ browser: true }),
     typescript({ inlineSources: !isProd }),
     commonjs(),
