@@ -1,10 +1,6 @@
 # OS X
 .DS_Store
 
-# Intellij
-*.iml
-.idea
-
 # npm / yarn
 node_modules
 package-lock.json
@@ -17,3 +13,7 @@ styles.css
 manifest.json
 data.json
 hot-reload.bat
+
+# VS Code
+.vscode
+

@@ -44,7 +44,10 @@ export default class ActionTrackerPlugin extends Plugin {
         todos: todos,
         openFile: (filePath: string) => {
           const file = this.app.vault.getAbstractFileByPath(filePath) as TFile;
-          this.app.workspace.splitActiveLeaf().openFile(file);
+          if(this.app.workspace.getActiveFile()==null) 
+            this.app.workspace.activeLeaf.openFile(file);
+          else
+            this.app.workspace.splitActiveLeaf().openFile(file);
         },
         toggleTodo: (todo: TodoItem, newStatus: TodoItemStatus) => {
           this.todoIndex.setStatus(todo, newStatus);
