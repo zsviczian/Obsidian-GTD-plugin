@@ -26,6 +26,7 @@ export interface ActionTrackerSettings {
   scheduledTooltip: string;
   contextActionTooltip: string;
   somedayTooltip: string;
+  openFilesInNewLeaf: boolean;
 }
 
 export const DEFAULT_SETTINGS: ActionTrackerSettings = {
@@ -55,6 +56,7 @@ export const DEFAULT_SETTINGS: ActionTrackerSettings = {
   contextActionTooltip:
     'Context Actions: Only TODOs that have a valid Context (Person, Project, Location) and a valid Action Tag appear here.',
   somedayTooltip: 'Someday / Maybe',
+  openFilesInNewLeaf: true,
 };
 
 export class ActionTrackerSettingTab extends PluginSettingTab {
@@ -310,6 +312,19 @@ export class ActionTrackerSettingTab extends PluginSettingTab {
         'As you customize some of the selectors, views may slightly change their meaning. You can update ' +
         'the tooltip text to help you remember your intent with each view.',
     });
+
+    this.containerEl.createEl('h3', { text: 'Opening Files' });
+    new Setting(containerEl)
+      .setName('Open files in a new leaf')
+      .setDesc(
+        'If enabled, when opening the file containing a TODO that file will open in a new leaf. If disabled, it will replace the file that you currently have open.',
+      )
+    .addToggle((value) =>
+      value.setValue(this.plugin.settings.openFilesInNewLeaf).onChange(async (value) => {
+        this.plugin.settings.openFilesInNewLeaf = value;
+        await this.plugin.saveViewDisplaySettings();
+      }),
+    );
 
     this.containerEl.createEl('h3', { text: 'Inbox' });
     new Setting(containerEl).setName('Show/hide Inbox').addToggle((value) =>
